@@ -1,9 +1,14 @@
+/************************************************************
+ * @file Io.cpp
+ * @brief The implementation for I/O related functionalities
+ ************************************************************/
 #ifndef IO_H
 #define IO_H
 
 /**********************************
  ** Library Includes
  **********************************/
+#include "Checkers.h"
 
 /**********************************
  ** Third Party Libraries Includes
@@ -11,8 +16,11 @@
 #include "Arduino.h"
 
 /**********************************
- ** Function prototypes
+ ** Function Prototypes
  **********************************/
+/* Helper function for converting board map to integer indices */
+void IO_ConvertMapToIndices(String (&move_string)[2], int (&move_int)[2][2]);
+
 /* Voice Recognition Input functions */
 void IO_GetVoiceRecognitionInput(String (&move_command)[2]);
 
@@ -26,6 +34,6 @@ void IO_SetTurnIndicator(int player_turn);
 void IO_WinnerTurnIndicator(int winner);
 
 /* Game Map LED functions */
-void IO_SetHWGameMap(int (&game_map)[8][8]);
+void IO_SetHWGameMap(Checkers checker_game);
 
-#endif // IO_H
+#endif /* IO_H */

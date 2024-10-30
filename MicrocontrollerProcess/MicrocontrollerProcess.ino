@@ -1,6 +1,12 @@
+/***********************************************************************************
+ * @file MicrocontrollerProcess.ino
+ * @brief The runnable file for the microcontroller to call all necessary functions
+ ***********************************************************************************/
+
 /**********************************
  ** Library Includes
  **********************************/
+#include "Checkers.h"
 #include "Io.h"
 
 /**********************************
@@ -16,13 +22,17 @@ int player_turn;
 /* The saved game map */
 int game_map[8][8];
 
-/* Strings for storing potential moves */
+/* Variables for storing potential moves */
 String first_button_input; /* The string if there is only one button input */
-String move_command[2]; /* The move command to send to the game algorithm */
+String move_command[2]; /* The move command broken down into a string array */
 String move_queue;
+int move_int[2][2]; /* 2D array for storing the move to send to the game algorithm */
 
 /* Indicate if there is a winner (0=No, 1=Yes) */
 int winner;
+
+/* The Checkers game containing the board and player information */
+Checkers checkers_game;
 
 /**********************************
  ** Function Definitions
@@ -38,7 +48,6 @@ void setup() {
   IO_InitTurnIndicator();
 
   /* Global variable initializations */
-  player_turn = 1;
   first_button_input = "";
   move_command[0] = "";
   move_command[1] = "";
@@ -52,33 +61,51 @@ void setup() {
  * @note Must be named "loop" so it will repeatedly run on the MCU
  */
 void loop() {
-  if (winner == 0) { /* When there is no winner and the game is going on */
-    if (first_button_input == ""){ /* If no buttons have already been pressed to indicate a move */
+  /* Check if there is a winner: when there is no winner, the game goes on */
+  if (checkers_game.Checkers_GetWin() == 0) {
+    /* Check the voice recognition module for a move */
+    if (first_button_input == ""){
       IO_GetVoiceRecognitionInput(move_command);
     }
-    if (move_command[0] == "" || move_command[1] == "") { /* If no voice command has been received */
+
+    /* If no voice command has been received */
+    if (move_command[0] == "" || move_command[1] == "") {
       move_queue = IO_GetButtonInput();
       if (first_button_input == "" && move_queue != "") {
         /* Store first button input */
         first_button_input = move_queue;
+        move_queue = "";
       }
       else if (first_button_input != "" && move_queue != "") {
         /* Store move in array */
         move_command[0] = first_button_input;
         move_command[1] = move_queue;
         first_button_input = "";
+        move_queue = "";
       }
     }
-    /* If one button input is received, store it until a second button input is received */
-    if (move_command[0] != "" || move_command[1] != "") { /* If there is a move command */
-      delay(5); /* temp */
-      /* Make a call to the game algorithm to pass in moves */
+    /* Clear the first button move (first_button_input) if a voice command gets received */
+    else {
+      first_button_input = "";
     }
-    IO_SetTurnIndicator(player_turn);
-    IO_SetHWGameMap(game_map);
-    /* Check if there is a winner */
+
+    /* If there is a move command */
+    if (move_command[0] != "" || move_command[1] != "") {
+      /* Convert the string to a 2D integer array to send to the game algorithm */
+      IO_ConvertMapToIndices(move_command, move_int);
+  
+      /* Make a call to the game algorithm to pass in moves */
+      checkers_game.Checkers_Turn(move_int[0], move_int[1]);
+    }
+
+    /* Set the turn indicator LEDs */
+    IO_SetTurnIndicator(checkers_game.Checkers_GetActivePlayer());
+
+    /* Set the game map LEDs */
+    IO_SetHWGameMap(checkers_game);
   }
   else {
-    IO_WinnerTurnIndicator(player_turn);
+    /* Flash the turn indicator LED based on the winner until restarted */
+    IO_WinnerTurnIndicator(checkers_game.Checkers_GetActivePlayer());
   }
 }

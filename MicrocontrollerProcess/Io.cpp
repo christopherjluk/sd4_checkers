@@ -1,11 +1,18 @@
+/************************************************************
+ * @file Io.cpp
+ * @brief The implementation for I/O related functionalities
+ ************************************************************/
+
 /**********************************
  ** Library Includes
  **********************************/
+#include "Checkers.h"
 #include "Io.h"
 
 /**********************************
  ** Third Party Libraries Includes
  **********************************/
+#include "Arduino.h"
 #include "LedControl.h"
 
 /**********************************
@@ -54,7 +61,20 @@ LedControl green_lc = LedControl(LED_MAX_CHIP_GREEN_PIN, LED_MAX_CHIP_CLK_PIN, L
  ** Function Definitions
  **********************************/
 /**
- * Will check for a voice command and make sure it follows the right format
+ * Converts a move command string to a form of a 2d integer array
+ *
+ * @param move_string: The move command string being converted
+ * @param move_int: The move command returned as a form of a 2d integer array
+ */
+void IO_ConvertMapToIndices(String (&move_string)[2], int (&move_int)[2][2]) {
+  move_int[0][0] = move_string[0].charAt(0) - 65; /* A is 65 in the ASCII code, corresponds with row 0 */
+  move_int[0][1] = move_string[0].charAt(1) - 49; /* 1 is 49 in the ASCII code, corresponds with column 0 */
+  move_int[1][0] = move_string[1].charAt(0) - 65; /* A is 65 in the ASCII code, corresponds with row 0 */
+  move_int[1][1] = move_string[1].charAt(1) - 49; /* 1 is 49 in the ASCII code, corresponds with column 0 */
+}
+
+/**
+ * Checks for a voice command and make sure it follows the right format
  *
  * @param move_command: The move command being returned
  */
@@ -67,10 +87,14 @@ void IO_GetVoiceRecognitionInput(String (&move_command)[2]) {
       (voice_command.charAt(2) == ' ') &&
       (voice_command.charAt(3) >= 'A' && voice_command.charAt(3) <= 'F') &&
       (voice_command.charAt(4) >= '1' && voice_command.charAt(4) <= '8')) {
-    move_command[0] = voice_command.substring(0, 2); /* Location to move from */
-    move_command[1] = voice_command.substring(3, 2); /* Location to move to */
+    /* Location to move from */
+    move_command[0] = voice_command.substring(0, 2);
+
+    /* Location to move to */
+    move_command[1] = voice_command.substring(3, 2);
   }
-  else { /* Return something so that the process knows it is empty */
+  /* Return something so that the process knows it is empty */
+  else {
     move_command[0] = "";
     move_command[1] = "";
   }
@@ -88,7 +112,7 @@ void IO_InitButton() {
 }
 
 /**
- * Will check if any buttons have been pressed
+ * Checks if any buttons have been pressed
  *
  * @return String: The string command to return
  */
@@ -241,7 +265,7 @@ String IO_GetButtonInput() {
 }
 
 /**
- * Initialize the turn indicator LED pins
+ * Initializes the turn indicator LED pins
  *
  */
 void IO_InitTurnIndicator() {
@@ -293,15 +317,16 @@ void IO_WinnerTurnIndicator(int winner) {
 }
 
 /**
- * Will update the RGB LEDs corresponding to the game map
+ * Update the RGB LEDs corresponding to the game map
  *
- * @note This will need to change to reflect how the PCB is structured
+ * @param checker_game: The checker game that the board is being retrieved from
+ * @note This may need to be updated based on the PCB design
  */
-void IO_SetHWGameMap(int (&game_map)[8][8]) {
+void IO_SetHWGameMap(Checkers checker_game) {
   /* Get game map from game algorithm and update */
   for (int row = 0; row < 8; row++) {
     for (int col = 0; col < 8; col++) {
-      switch (game_map[row][col]) {
+      switch (checker_game.Checkers_GetBoardAt(row, col)) {
         case EMPTY_COLOR: /* No piece */
           red_lc.setLed(0, row, col, false);
           green_lc.setLed(0, row, col, false);
