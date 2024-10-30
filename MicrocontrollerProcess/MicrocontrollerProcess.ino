@@ -16,20 +16,11 @@
 /**********************************
  ** Global Variables
  **********************************/
-/* Variable to indicate which player's turn it is */
-int player_turn;
-
-/* The saved game map */
-int game_map[8][8];
-
 /* Variables for storing potential moves */
 String first_button_input; /* The string if there is only one button input */
 String move_command[2]; /* The move command broken down into a string array */
 String move_queue;
 int move_int[2][2]; /* 2D array for storing the move to send to the game algorithm */
-
-/* Indicate if there is a winner (0=No, 1=Yes) */
-int winner;
 
 /* The Checkers game containing the board and player information */
 Checkers checkers_game;
