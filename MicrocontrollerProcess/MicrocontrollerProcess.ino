@@ -43,7 +43,6 @@ void setup() {
   move_command[0] = "";
   move_command[1] = "";
   move_queue = "";
-  winner = 0;
 }
 
 /**
