@@ -10,10 +10,21 @@
 #include "Adafruit_BluefruitLE_UART.h"
 #include "BluefruitConfig.h"
 
+
+
+//the above step needs to happen sequentially to get data to the esp32
+//look for a peripheral to connect to
+//connect, record audio
+//determine if input is valid
+//check for if the hardcoded service and characteristic are offered by ble module
+//send data to the characteristic
+//ble.read()
+
 /* Application settings */
 #define FACTORYRESET_ENABLE         1
 #define MINIMUM_FIRMWARE_VERSION    "0.6.6"
 #define MODE_LED_BEHAVIOUR          "MODE"
+
 
 //cs to gpio 22
 //irq to gpio 17
@@ -29,9 +40,47 @@
 Adafruit_BluefruitLE_SPI ble(22, 17, 21);
 String checkerMove;
 
+String test[8];
+
+
 void error(const __FlashStringHelper *err) {
   Serial.println(err);
   while (1);
+}
+
+//make all array values null (not set)
+void clearArray(String arr[]){
+
+ for (size_t i = 0; i < sizeof(test) / sizeof(test[0]); i++) {
+  if (test[i].length() == 0) {
+    break; // Exit the loop if the element is empty
+  }
+
+  test[i]="";
+ }
+
+}
+
+
+//parse function
+//separate checker move into an array where each element is a string of 5 characters
+//send to Chris L's function that converts each element to the format of Luke's function
+void parseMoves(String moves,String result[]) {
+ // Vector to store parsed moves
+  int i=0;
+  int start = 0;
+  int spaceIndex = moves.indexOf(' '); // Find the first space
+
+  while (spaceIndex != -1) {
+    // Get the substring from start to the next space
+    if (start != spaceIndex) {
+      result[i]=moves.substring(start, moves.indexOf(' ', spaceIndex + 1));
+      i+=1;
+    }
+    // Move to the next space
+    start = spaceIndex + 1;
+    spaceIndex = moves.indexOf(' ', start);
+  }
 }
 
 void setup(void) {
@@ -72,6 +121,7 @@ void setup(void) {
 void loop(void) {
   // Check if data is available from the BLE module
 
+  Serial.println();
   if(ble.isConnected()){
     Serial.println("Connected");
   }
@@ -91,8 +141,22 @@ void loop(void) {
     Serial.println(receivedData);
 
   }
-    Serial.print("Entire data string: ");
-    Serial.print(checkerMove);
+
+    parseMoves(checkerMove,test);
+
+for (size_t i = 0; i < sizeof(test) / sizeof(test[0]); i++) {
+  if (test[i].length() == 0) {
+    break; // Exit the loop if the element is empty
+  }
+
+  Serial.println("Move " + String(i) + ": " + test[i]);
+}
+
+  clearArray(test);
 
   delay(1000);
 }
+
+
+
+
