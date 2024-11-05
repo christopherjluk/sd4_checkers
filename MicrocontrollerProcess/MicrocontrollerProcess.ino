@@ -8,6 +8,7 @@
  **********************************/
 #include "Checkers.h"
 #include "Io.h"
+#include "VoiceRecognition.h"
 
 /**********************************
  ** Third party Library Includes
@@ -38,6 +39,9 @@ void setup() {
   IO_InitButton();
   IO_InitTurnIndicator();
 
+  /* Voice recognition setup */
+  VoiceRecognition_Init();
+
   /* Global variable initializations */
   first_button_input = "";
   move_command[0] = "";
@@ -53,6 +57,9 @@ void setup() {
 void loop() {
   /* Check if there is a winner: when there is no winner, the game goes on */
   if (checkers_game.Checkers_GetWin() == 0) {
+    /* Check the voice recognition module to update BLE connection */
+    VoiceRecognition_CheckConnection();
+
     /* Check the voice recognition module for a move */
     if (first_button_input == ""){
       IO_GetVoiceRecognitionInput(move_command);

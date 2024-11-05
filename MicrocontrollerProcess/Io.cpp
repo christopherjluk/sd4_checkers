@@ -8,6 +8,7 @@
  **********************************/
 #include "Checkers.h"
 #include "Io.h"
+#include "VoiceRecognition.h"
 
 /**********************************
  ** Third Party Libraries Includes
@@ -19,17 +20,17 @@
  ** Defines
  **********************************/
 /* Pins */
-#define BUTTON_ARRAY_PIN1 (36)
-#define BUTTON_ARRAY_PIN2 (39)
-#define BUTTON_ARRAY_PIN3 (34)
-#define BUTTON_ARRAY_PIN4 (35)
+#define BUTTON_ARRAY_PIN1              (36)
+#define BUTTON_ARRAY_PIN2              (39)
+#define BUTTON_ARRAY_PIN3              (34)
+#define BUTTON_ARRAY_PIN4              (35)
 #define PLAYER1_TURN_INDICATOR_LED_PIN (12)
 #define PLAYER2_TURN_INDICATOR_LED_PIN (13)
-#define LED_MAX_CHIP_RED_PIN (33)
-#define LED_MAX_CHIP_GREEN_PIN (25)
-#define LED_MAX_CHIP_BLUE_PIN (26)
-#define LED_MAX_CHIP_CS_PIN (27)
-#define LED_MAX_CHIP_CLK_PIN (14)
+#define LED_MAX_CHIP_RED_PIN           (33)
+#define LED_MAX_CHIP_GREEN_PIN         (25)
+#define LED_MAX_CHIP_BLUE_PIN          (26)
+#define LED_MAX_CHIP_CS_PIN            (27)
+#define LED_MAX_CHIP_CLK_PIN           (14)
 
 /* Button array thresholds (Subject to change) */
 #define BUTTON_THRESHOLD1 (5)
@@ -40,12 +41,12 @@
 #define BUTTON_THRESHOLD6 (30)
 #define BUTTON_THRESHOLD7 (35)
 #define BUTTON_THRESHOLD8 (40)
-#define ANALOG_READ_MAX (4096)
+#define ANALOG_READ_MAX   (4096)
 
 /* Colors */
-#define EMPTY_COLOR (0)
-#define PLAYER1_COLOR (1)
-#define PLAYER2_COLOR (2)
+#define EMPTY_COLOR        (0)
+#define PLAYER1_COLOR      (1)
+#define PLAYER2_COLOR      (2)
 #define PLAYER1_KING_COLOR (3)
 #define PLAYER2_KING_COLOR (4)
 
@@ -79,7 +80,9 @@ void IO_ConvertMapToIndices(String (&move_string)[2], int (&move_int)[2][2]) {
  * @param move_command: The move command being returned
  */
 void IO_GetVoiceRecognitionInput(String (&move_command)[2]) {
-  String voice_command = ""; /* Get voice command from Voice Recognition module */
+  /* Get voice command from Voice Recognition module */
+  String voice_command;
+  VoiceRecognition_GetInput(voice_command);
   
   /* Voice commands should be in the format of A1 B2 */
   if ((voice_command.charAt(0) >= 'A' && voice_command.charAt(0) <= 'F') &&
