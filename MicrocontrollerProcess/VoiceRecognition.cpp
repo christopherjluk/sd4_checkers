@@ -15,7 +15,6 @@
 #include "Adafruit_BluefruitLE_SPI.h"
 #include "Adafruit_BluefruitLE_UART.h"
 #include "Arduino.h"
-#include "BluefruitConfig.h"
 #include "SPI.h"
 
 /**********************************
@@ -25,6 +24,7 @@
 #define FACTORYRESET_ENABLE      (1)
 #define MINIMUM_FIRMWARE_VERSION ("0.6.6")
 #define MODE_LED_BEHAVIOR        ("MODE")
+#define VERBOSE_MODE             (true)
 
 /**********************************
  ** Global Variables
@@ -36,7 +36,7 @@ bool ble_connected;
  ** Private Function Prototypes
  **********************************/
 void VoiceRecognition_OutputError(const __FlashStringHelper *err);
-void VoiceRecognition_ParseMoves(String moves, String (&result)[2])
+void VoiceRecognition_ParseMoves(String moves, String (&result)[2]);
 
 /**********************************
  ** Function Definitions
@@ -67,7 +67,7 @@ void VoiceRecognition_ParseMoves(String moves, String (&result)[2]) {
   while ((space_index != -1) && (index < 2)) {
     /* Get the substring from start to the next space */
     if (start != space_index) {
-      results[index] = moves.substring(start, moves.indexOf(' ', space_index + 1));
+      result[index] = moves.substring(start, moves.indexOf(' ', space_index + 1));
       index += 1;
     }
 

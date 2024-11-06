@@ -81,23 +81,14 @@ void IO_ConvertMapToIndices(String (&move_string)[2], int (&move_int)[2][2]) {
  */
 void IO_GetVoiceRecognitionInput(String (&move_command)[2]) {
   /* Get voice command from Voice Recognition module */
-  String voice_command;
-  VoiceRecognition_GetInput(voice_command);
+  VoiceRecognition_GetInput(move_command);
   
-  /* Voice commands should be in the format of A1 B2 */
-  if ((voice_command.charAt(0) >= 'A' && voice_command.charAt(0) <= 'F') &&
-      (voice_command.charAt(1) >= '1' && voice_command.charAt(1) <= '8') &&
-      (voice_command.charAt(2) == ' ') &&
-      (voice_command.charAt(3) >= 'A' && voice_command.charAt(3) <= 'F') &&
-      (voice_command.charAt(4) >= '1' && voice_command.charAt(4) <= '8')) {
-    /* Location to move from */
-    move_command[0] = voice_command.substring(0, 2);
-
-    /* Location to move to */
-    move_command[1] = voice_command.substring(3, 2);
-  }
-  /* Return something so that the process knows it is empty */
-  else {
+  /* Voice commands should be in the format of A1 B2. If not they should be cleared */
+  if (!(move_command[0].charAt(0) >= 'A' && move_command[0].charAt(0) <= 'F') ||
+      !(move_command[0].charAt(1) >= '1' && move_command[0].charAt(1) <= '8') ||
+      !(move_command[1].charAt(0) >= 'A' && move_command[1].charAt(0) <= 'F') ||
+      !(move_command[1].charAt(1) >= '1' && move_command[1].charAt(1) <= '8')) {
+    /* Array should be cleared */
     move_command[0] = "";
     move_command[1] = "";
   }
