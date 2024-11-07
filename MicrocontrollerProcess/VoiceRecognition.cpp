@@ -35,7 +35,7 @@ Adafruit_BluefruitLE_SPI ble(22, 17, 21);
  ** Private Function Prototypes
  **********************************/
 void VoiceRecognition_OutputError(const __FlashStringHelper *err);
-void VoiceRecognition_ParseMoves(String moves, String (&result)[2]);
+void VoiceRecognition_ParseMoves(String moves, String &result);
 
 /**********************************
  ** Function Definitions
@@ -117,9 +117,16 @@ void VoiceRecognition_GetInput(String &parsed_checker_move) {
     while (ble.available()) {
       /* Read and process incoming data */
       char received_data = ble.read();
-      checker_move += received_data; 
+      checker_move += received_data;
+
+      /* Print the received data */
+      Serial.print("Received Data: ");
+      Serial.println(received_data);
     }
   }
 
   VoiceRecognition_ParseMoves(checker_move, parsed_checker_move);
+  
+  /* Print the parsed move */
+  Serial.println(parsed_checker_move);
 }
