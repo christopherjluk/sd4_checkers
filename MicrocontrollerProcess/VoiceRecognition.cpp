@@ -29,8 +29,7 @@
 /**********************************
  ** Global Variables
  **********************************/
-Adafruit_BluefruitLE_SPI ble(0, 2, 4);
-bool ble_connected;
+Adafruit_BluefruitLE_SPI ble(22, 17, 21);
 
 /**********************************
  ** Private Function Prototypes
@@ -55,19 +54,19 @@ void VoiceRecognition_OutputError(const __FlashStringHelper *err) {
  * Parses a command from the BLE application into a move array of length 2
  *
  * @param moves: The moves from the BLE application to parse
- * @param result: The result of the parsing (lenght of 2) to send back
+ * @param result: The result of the move to send back
  */
-void VoiceRecognition_ParseMoves(String moves, String (&result)[2]) {
+void VoiceRecognition_ParseMoves(String moves, String &result) {
   /* Vector to store parsed moves */
   int index = 0;
   int start = 0;
   int space_index = moves.indexOf(' '); /* Find the first space */
 
   /* Only stores the first five characters and parses for spaces */
-  while ((space_index != -1) && (index < 2)) {
+  while ((space_index != -1) && (index < 1)) {
     /* Get the substring from start to the next space */
     if (start != space_index) {
-      result[index] = moves.substring(start, moves.indexOf(' ', space_index + 1));
+      result = moves.substring(start, moves.indexOf(' ', space_index + 1));
       index += 1;
     }
 
@@ -82,18 +81,17 @@ void VoiceRecognition_ParseMoves(String moves, String (&result)[2]) {
  *
  */
 void VoiceRecognition_Init() {
-  /* Initialize Serial */
+  /* Initializer serial */
   Serial.begin(115200);
-  
+
   /* Initialize the Bluefruit module */
   if (!ble.begin(VERBOSE_MODE)) {
     VoiceRecognition_OutputError(F("Couldn't find Bluefruit, check wiring?"));
   }
-  Serial.println(F("OK!"));
 
   /* Optional factory reset */
   if (FACTORYRESET_ENABLE && !ble.factoryReset()) {
-    VoiceRecognition_OutputError(F("Couldn't factory reset"));
+      VoiceRecognition_OutputError(F("Couldn't factory reset"));
   }
 
   /* Disable command echo from Bluefruit */
@@ -104,37 +102,23 @@ void VoiceRecognition_Init() {
 
   /* Set Bluefruit to DATA mode */
   ble.setMode(BLUEFRUIT_MODE_DATA);
-
-  /* Default is BLE is not connected */
-  ble_connected = false;
-}
-
-/**
- * Checks to see if Bluetooth is connected
- *
- */
-void VoiceRecognition_CheckConnection() {
-  if (ble.isConnected()) {
-    Serial.println("Connected");
-  }
-  else {
-    Serial.println("Not connected");
-  }
 }
 
 /**
  * Receives checker move from BLE and parse to return to IO
  *
- * @param parsed_checker_move: The size two String array that returns a checker move 
+ * @param parsed_checker_move: The String that returns a checker move 
  */
-void VoiceRecognition_GetInput(String (&parsed_checker_move)[2]) {
+void VoiceRecognition_GetInput(String &parsed_checker_move) {
   String checker_move = "";
 
-  while (ble.available()) {
-    /* Read and process incoming data */
-    Serial.println("BLE available");
-    char received_data = ble.read();
-    checker_move += received_data;
+  /* Check for data if BLE is connected */
+  if (ble.isConnected()) {
+    while (ble.available()) {
+      /* Read and process incoming data */
+      char received_data = ble.read();
+      checker_move += received_data; 
+    }
   }
 
   VoiceRecognition_ParseMoves(checker_move, parsed_checker_move);

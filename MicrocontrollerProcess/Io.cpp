@@ -81,14 +81,20 @@ void IO_ConvertMapToIndices(String (&move_string)[2], int (&move_int)[2][2]) {
  */
 void IO_GetVoiceRecognitionInput(String (&move_command)[2]) {
   /* Get voice command from Voice Recognition module */
-  VoiceRecognition_GetInput(move_command);
+  String voice_command;
+  VoiceRecognition_GetInput(voice_command);
   
   /* Voice commands should be in the format of A1 B2. If not they should be cleared */
-  if (!(move_command[0].charAt(0) >= 'A' && move_command[0].charAt(0) <= 'F') ||
-      !(move_command[0].charAt(1) >= '1' && move_command[0].charAt(1) <= '8') ||
-      !(move_command[1].charAt(0) >= 'A' && move_command[1].charAt(0) <= 'F') ||
-      !(move_command[1].charAt(1) >= '1' && move_command[1].charAt(1) <= '8')) {
+  if ((voice_command.charAt(0) >= 'A' && voice_command.charAt(0) <= 'H') &&
+      (voice_command.charAt(1) >= '1' && voice_command.charAt(1) <= '8') &&
+      (voice_command.charAt(2) == ' ') &&
+      (voice_command.charAt(3) >= 'A' && voice_command.charAt(3) <= 'H') &&
+      (voice_command.charAt(4) >= '1' && voice_command.charAt(4) <= '8')) {
     /* Array should be cleared */
+    move_command[0] = voice_command.substring(0, 2);
+    move_command[1] = voice_command.substring(3, 5);
+  }
+  else {
     move_command[0] = "";
     move_command[1] = "";
   }
@@ -109,6 +115,7 @@ void IO_InitButton() {
  * Checks if any buttons have been pressed
  *
  * @return String: The string command to return
+ * @note UPDATE FOR PCB
  */
 String IO_GetButtonInput() {
   String move_queue = "";
@@ -285,6 +292,33 @@ void IO_SetTurnIndicator(int player_turn) {
 }
 
 /**
+ * Will blink the turn indicator if an invalid move is asked for
+ *
+ * @param player_turn: The turn of the current player
+ */
+void IO_BlinkTurnIndicator(int player_turn) {
+  /* Get player turn from game algorithm and update */
+  if (player_turn == 1) {
+    digitalWrite(PLAYER1_TURN_INDICATOR_LED_PIN, LOW);
+    delay(200);
+    digitalWrite(PLAYER1_TURN_INDICATOR_LED_PIN, HIGH);
+    delay(200);
+    digitalWrite(PLAYER1_TURN_INDICATOR_LED_PIN, LOW);
+    delay(200);
+    digitalWrite(PLAYER1_TURN_INDICATOR_LED_PIN, HIGH);
+  }
+  else if (player_turn == 2) {
+    digitalWrite(PLAYER2_TURN_INDICATOR_LED_PIN, LOW);
+    delay(200);
+    digitalWrite(PLAYER2_TURN_INDICATOR_LED_PIN, HIGH);
+    delay(200);
+    digitalWrite(PLAYER2_TURN_INDICATOR_LED_PIN, LOW);
+    delay(200);
+    digitalWrite(PLAYER2_TURN_INDICATOR_LED_PIN, HIGH);
+  }
+}
+
+/**
  * Will alternate the turn indicator LED for the winner
  *
  * @param winner: The player who won the game
@@ -311,10 +345,31 @@ void IO_WinnerTurnIndicator(int winner) {
 }
 
 /**
+ * Initializes the game map LEDs
+ *
+ */
+void IO_InitGameMap() {
+  /* Initialize the red LED max chip (via LED control) */
+  red_lc.shutdown(0, false);
+  red_lc.setIntensity(0, 15);
+  red_lc.clearDisplay(0);
+
+  /* Initialize the blue LED max chip (via LED control) */
+  blue_lc.shutdown(0, false);
+  blue_lc.setIntensity(0, 15);
+  blue_lc.clearDisplay(0);
+
+  /* Initialize the green LED max chip (via LED control) */
+  green_lc.shutdown(0, false);
+  green_lc.setIntensity(0, 15);
+  green_lc.clearDisplay(0);
+}
+
+/**
  * Update the RGB LEDs corresponding to the game map
  *
  * @param checker_game: The checker game that the board is being retrieved from
- * @note This may need to be updated based on the PCB design
+ * @note UPDATE FOR PCB
  */
 void IO_SetHWGameMap(Checkers checker_game) {
   /* Get game map from game algorithm and update */
@@ -325,34 +380,40 @@ void IO_SetHWGameMap(Checkers checker_game) {
           red_lc.setLed(0, row, col, false);
           green_lc.setLed(0, row, col, false);
           blue_lc.setLed(0, row, col, false);
+          Serial.print("0 ");
           break;
         case PLAYER1_COLOR: /* Player 1 regular piece */
           /* Red */
           red_lc.setLed(0, row, col, true);
           green_lc.setLed(0, row, col, false);
           blue_lc.setLed(0, row, col, false);
+          Serial.print("1 ");
           break;
         case PLAYER2_COLOR: /* Player 2 regular piece */
           /* Blue */
           red_lc.setLed(0, row, col, false);
           green_lc.setLed(0, row, col, false);
           blue_lc.setLed(0, row, col, true);
+          Serial.print("2 ");
           break;
         case PLAYER1_KING_COLOR: /* Player 1 king piece */
           /* Yellow */
           red_lc.setLed(0, row, col, true);
           green_lc.setLed(0, row, col, true);
           blue_lc.setLed(0, row, col, false);
+          Serial.print("3 ");
           break;
         case PLAYER2_KING_COLOR: /* Player 2 king piece */
           /* Light Blue */
           red_lc.setLed(0, row, col, false);
           green_lc.setLed(0, row, col, true);
           blue_lc.setLed(0, row, col, true);
+          Serial.print("4 ");
           break;
         default:
           break;
       }
     }
+    Serial.print("\n");
   }
 }

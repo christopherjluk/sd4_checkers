@@ -14,7 +14,6 @@
  ** Function Prototypes
  **********************************/
 void VoiceRecognition_Init();
-void VoiceRecognition_CheckConnection();
-void VoiceRecognition_GetInput(String (&parsed_checker_move)[2]);
+void VoiceRecognition_GetInput(String &parsed_checker_move);
 
 #endif /* VOICERECOGNITION_H */

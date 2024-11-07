@@ -31,9 +31,11 @@ String IO_GetButtonInput();
 /* Turn Indicator LED functions */
 void IO_InitTurnIndicator();
 void IO_SetTurnIndicator(int player_turn);
+void IO_BlinkTurnIndicator(int player_turn);
 void IO_WinnerTurnIndicator(int winner);
 
 /* Game Map LED functions */
+void IO_InitHWGameMap();
 void IO_SetHWGameMap(Checkers checker_game);
 
 #endif /* IO_H */

@@ -39,11 +39,11 @@ Checkers::Checkers() {
   for (int i = 0; i < 8; i++) {   /* For iterating through the rows */
     for (int j = 0; j < 8; j++) { /* For iterating through the columns */
       /* Initializes player 1's pieces */
-      if (i > 4 && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) {
+      if (i > 4 && ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1))) {
         board[i][j] = 1;
       }
       /* Initializes player 2's pieces */
-      else if (i < 3 && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) {
+      else if (i < 3 && ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1))) {
         board[i][j] = 2;
       }
       /* Initializes empty squares */
@@ -285,7 +285,8 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
   }
 
   /* If a move is to an invalid square, return that move was invalid */
-  if ((!(from[0] % 2 == 0 && from[1] % 2 == 0) && !(from[0] % 2 == 1 && from[1] % 2 == 1)) || (!(to[0] % 2 == 0 && to[1] % 2 == 0) && !(to[0] % 2 == 1 && to[1] % 2 == 1))) {
+  if ((!(from[0] % 2 == 0 && from[1] % 2 == 1) && !(from[0] % 2 == 1 && from[1] % 2 == 0)) || /* Checks if from is valid */
+      (!(to[0] % 2 == 0 && to[1] % 2 == 1) && !(to[0] % 2 == 1 && to[1] % 2 == 0))) { /* Checks if to is valid */
     return 0;
   }
 
@@ -295,28 +296,37 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
   }
 
   /* If there is no jump available and an adjacent diagonal square is open (up for player 1, down for player 2, both for kings), then the move can be done */
-  if (!Checkers_CanJump() && board[to[0]][to[1]] == 0 && ((board[from[0]][from[1]] == 1 && (to[0] == from[0] - 1 && (to[1] == from[1] - 1 || to[1] == from[1] + 1))) || (board[from[0]][from[1]] == 2 && (to[0] == from[0] + 1 && (to[1] == from[1] - 1 || to[1] == from[1] + 1))) || ((board[from[0]][from[1]] == 3 || board[from[0]][from[1]] == 4) && ((to[0] == from[0] - 1 || to[0] == from[0] + 1) && (to[1] == from[1] - 1 || to[1] == from[1] + 1))))) {
-    /* Checks if the move results in a kinging */
-    if ((board[from[0]][from[1]] == 1 && to[0] == 0) || (board[from[0]][from[1]] == 2 && to[0] == 7)) {
-      board[to[0]][to[1]] == board[from[0]][from[1]] + 2;
-    }
-    /* Otherwise, update the new square with the piece */
-    else {
-      board[to[0]][to[1]] == board[from[0]][from[1]];
-    }
-    
-    /* Clear the original square */
-    board[from[0]][from[1]] = 0;
-  }
-  /* If there is a jump available for a regular piece (with the proper conditions met where an empty square follows an opposing piece), then the move can be valid */
-  else if (board[to[0]][to[1]] == 0 && ((board[from[0]][from[1]] == 1 && (to[0] == from[0] - 2 && ((to[1] == from[1] - 2 && (board[from[0] - 1][from[1] - 1] == 2 || board[from[0] - 1][from[1] - 1] == 4)) || (to[1] == from[1] + 2 && (board[from[0]-1][from[1]+1] == 2 || board[from[0]-1][from[1]+1] == 4))))) || (board[from[0]][from[1]] == 2 && (to[0] == from[0] + 2 && ((to[1] == from[1] - 2 && (board[from[0] + 1][from[1] - 1] == 1 || board[from[0] + 1][from[1] - 1] == 3)) || (to[1] == from[1] + 2 && (board[from[0] + 1][from[1] + 1] == 1 || board[from[0] + 1][from[1] + 1] == 3))))))) {
+  if (!Checkers_CanJump() && board[to[0]][to[1]] == 0 && /* Checks if there is a jump and if the desired space is empty */
+      ((board[from[0]][from[1]] == 1 && (to[0] == from[0] - 1 && (to[1] == from[1] - 1 || to[1] == from[1] + 1))) || /* Checks if the space is adjacent diagonal upwards (piece 1) */
+       (board[from[0]][from[1]] == 2 && (to[0] == from[0] + 1 && (to[1] == from[1] - 1 || to[1] == from[1] + 1))) || /* Checks if the space is adjacent diagonal downwards (piece 2) */ 
+       ((board[from[0]][from[1]] == 3 || board[from[0]][from[1]] == 4) && ((to[0] == from[0] - 1 || to[0] == from[0] + 1) && (to[1] == from[1] - 1 || to[1] == from[1] + 1))))) { /* Checks if the space is adjacent diagonal (king) */
     /* Checks if the move results in a kinging */
     if ((board[from[0]][from[1]] == 1 && to[0] == 0) || (board[from[0]][from[1]] == 2 && to[0] == 7)) {
       board[to[0]][to[1]] = board[from[0]][from[1]] + 2;
     }
     /* Otherwise, update the new square with the piece */
     else {
-      board[to[0]][to[1]] == board[from[0]][from[1]];
+      board[to[0]][to[1]] = board[from[0]][from[1]];
+    }
+    
+    /* Clear the original square */
+    board[from[0]][from[1]] = 0;
+  }
+  /* If there is a jump available for a regular piece (with the proper conditions met where an empty square follows an opposing piece), then the move can be valid */
+  else if (board[to[0]][to[1]] == 0 && /* Checks if the desired space is empty */
+           ((board[from[0]][from[1]] == 1 && (to[0] == from[0] - 2 && /* Checks if the space is upwards with the jump (piece 1) */
+             ((to[1] == from[1] - 2 && (board[from[0] - 1][from[1] - 1] == 2 || board[from[0] - 1][from[1] - 1] == 4)) || /* Checks if there is an opposing piece in between to the left */ 
+              (to[1] == from[1] + 2 && (board[from[0] - 1][from[1] + 1] == 2 || board[from[0] - 1][from[1] + 1] == 4))))) || /* Checks if there is an opposing piece in between to the right */
+            (board[from[0]][from[1]] == 2 && (to[0] == from[0] + 2 && /* Checks if the space is downwards with the jump (piece 2) */
+             ((to[1] == from[1] - 2 && (board[from[0] + 1][from[1] - 1] == 1 || board[from[0] + 1][from[1] - 1] == 3)) || /* Checks if there is an opposing piece in between to the left */ 
+              (to[1] == from[1] + 2 && (board[from[0] + 1][from[1] + 1] == 1 || board[from[0] + 1][from[1] + 1] == 3))))))) { /* Checks if there is an opposing piece in between to the right */
+    /* Checks if the move results in a kinging */
+    if ((board[from[0]][from[1]] == 1 && to[0] == 0) || (board[from[0]][from[1]] == 2 && to[0] == 7)) {
+      board[to[0]][to[1]] = board[from[0]][from[1]] + 2;
+    }
+    /* Otherwise, update the new square with the piece */
+    else {
+      board[to[0]][to[1]] = board[from[0]][from[1]];
     }
 
     /* Clear the original square */
@@ -349,7 +359,10 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
     }
   }
   /* If there is a jump available for a king piece (with the proper conditions met where an empty square follows an opposing piece), then the move can be valid */
-  else if (board[to[0]][to[1]] == 0 && (to[0] == from[0] - 2 || to[0] == from[0] + 2) && (to[1] == from[1] - 2 || to[1] == from[1] + 2) && (board[from[0]][from[1]] == 3 && (board[(to[0]+from[0])/2][(to[1]+from[1])/2] == 2 || board[(to[0]+from[0])/2][(to[1]+from[1])/2] == 4)) || (board[from[0]][from[1]] == 4 && (board[(to[0]+from[0])/2][(to[1]+from[1])/2] == 1 || board[(to[0]+from[0])/2][(to[1]+from[1])/2] == 3))) {
+  else if (board[to[0]][to[1]] == 0 && /* Checks if the desired space is empty */
+           (to[0] == from[0] - 2 || to[0] == from[0] + 2) && (to[1] == from[1] - 2 || to[1] == from[1] + 2) && /* Checks if the space is a valid jump space */
+           (board[from[0]][from[1]] == 3 && (board[(to[0] + from[0]) / 2][(to[1] + from[1]) / 2] == 2 || board[(to[0] + from[0]) / 2][(to[1] + from[1]) / 2] == 4)) || /* Checks if there is an opposing piece in between (player 1) */
+           (board[from[0]][from[1]] == 4 && (board[(to[0] + from[0]) / 2][(to[1] + from[1]) / 2] == 1 || board[(to[0] + from[0]) / 2][(to[1] + from[1]) / 2] == 3))) { /* Checks if there is an opposing piece in between (player 2) */
     /* Update the new square with the current piece */
     board[to[0]][to[1]] = board[from[0]][from[1]];
 
@@ -357,7 +370,7 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
     board[from[0]][from[1]] = 0;
     
     /* Remove the piece that was jumped */
-    board[(to[0]+from[0])/2][(to[1]+from[1])/2] = 0;
+    board[(to[0] + from[0]) / 2][(to[1] + from[1]) / 2] = 0;
 
     /* If player 1 has the active turn, remove one piece from player 2's count */
     if (active_player == 1) {

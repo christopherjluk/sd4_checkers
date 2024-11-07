@@ -23,6 +23,7 @@ String first_button_input; /* The string if there is only one button input */
 String move_command[2]; /* The move command broken down into a string array */
 String move_queue;
 int move_int[2][2]; /* 2D array for storing the move to send to the game algorithm */
+int valid_move;
 
 /* The Checkers game containing the board and player information */
 Checkers checkers_game;
@@ -36,12 +37,12 @@ Checkers checkers_game;
  * @note Must be named "setup" so the MCU knows to run this first before running the loop
  */
 void setup() {
+  /* Voice recognition setup */
+  VoiceRecognition_Init();
+
   /* Pin setup */
   IO_InitButton();
   IO_InitTurnIndicator();
-
-  /* Voice recognition setup */
-  VoiceRecognition_Init();
 
   /* Global variable initializations */
   first_button_input = "";
@@ -58,9 +59,6 @@ void setup() {
 void loop() {
   /* Check if there is a winner: when there is no winner, the game goes on */
   if (checkers_game.Checkers_GetWin() == 0) {
-    /* Check the voice recognition module to update BLE connection */
-    VoiceRecognition_CheckConnection();
-
     /* Check the voice recognition module for a move */
     if (first_button_input == ""){
       IO_GetVoiceRecognitionInput(move_command);
@@ -88,12 +86,17 @@ void loop() {
     }
 
     /* If there is a move command */
-    if (move_command[0] != "" || move_command[1] != "") {
+    if (move_command[0] != "" && move_command[1] != "") {
       /* Convert the string to a 2D integer array to send to the game algorithm */
       IO_ConvertMapToIndices(move_command, move_int);
   
       /* Make a call to the game algorithm to pass in moves */
-      checkers_game.Checkers_Turn(move_int[0], move_int[1]);
+      valid_move = checkers_game.Checkers_Turn(move_int[0], move_int[1]);
+
+      /* Blink the turn indicator LED if the move is invalid */
+      if (valid_move == 0) {
+        IO_BlinkTurnIndicator(checkers_game.Checkers_GetActivePlayer());
+      }
     }
 
     /* Set the turn indicator LEDs */
@@ -101,6 +104,8 @@ void loop() {
 
     /* Set the game map LEDs */
     IO_SetHWGameMap(checkers_game);
+
+    delay(1000); /* DELETE FOR PCB */
   }
   else {
     /* Flash the turn indicator LED based on the winner until restarted */
