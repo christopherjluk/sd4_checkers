@@ -32,7 +32,7 @@
 #define LED_MAX_CHIP_CS_PIN            (27)
 #define LED_MAX_CHIP_CLK_PIN           (14)
 
-/* Button array thresholds (Subject to change) */
+/* Button array thresholds (UPDATE FOR PCB) */
 #define BUTTON_THRESHOLD1 (5)
 #define BUTTON_THRESHOLD2 (10)
 #define BUTTON_THRESHOLD3 (15)
@@ -59,8 +59,37 @@ LedControl blue_lc = LedControl(LED_MAX_CHIP_BLUE_PIN, LED_MAX_CHIP_CLK_PIN, LED
 LedControl green_lc = LedControl(LED_MAX_CHIP_GREEN_PIN, LED_MAX_CHIP_CLK_PIN, LED_MAX_CHIP_CS_PIN, 1);
 
 /**********************************
+ ** Private Function Prototypes
+ **********************************/
+void IO_MapToMaxChip(int row, int col, int &max_row, int &max_col);
+
+/**********************************
  ** Function Definitions
  **********************************/
+/**
+ * Convert the Checkerboard row/column to translate to the MAX row/column to set
+ *
+ * @param row: The row of the Checkerboard
+ * @param col: The column of the Checkerboard
+ * @param max_row: The row of the MAX chip to set to be returned
+ * @param max_col: The column of the MAX chip to set to be returned
+ * @note VERIFY THIS FUNCTION AND SEE IF IT WORKS WITH PCB
+ */
+void IO_MapToMaxChip(int row, int col, int &max_row, int &max_col) {
+  /* Rows will be on their orginal row divided by 2 on the MAX chip */
+  max_row = (int)(row / 2);
+
+  /* Check if the row is even or odd to determine where the columns map to on the MAX chip */
+  if (row % 2 == 0) {
+    /* Columns will take up the first 4 columns on the MAX chip if their row is divisible by 2 */
+    max_col = (int)(col / 2);
+  }
+  else {
+    /* Columns will take up the last 4 columns on the MAX chip if their row is not divisible by 2 */
+    max_col = (int)((col / 2) + 4);
+  }
+}
+
 /**
  * Converts a move command string to a form of a 2d integer array
  *
@@ -115,144 +144,144 @@ void IO_InitButton() {
  * Checks if any buttons have been pressed
  *
  * @return String: The string command to return
- * @note UPDATE FOR PCB
+ * @note VERIFY THIS FUNCTION WITH PCB
  */
 String IO_GetButtonInput() {
   String move_queue = "";
   
-  /* Button array 1 for rows 1 and 2 */
+  /* Button array 1 for rows 0 and 1 */
   if (analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD1) {
-    /* Button for [1, 1] */
+    /* Button for [0, 0] */
     move_queue = "A1";
   }
   else if (analogRead(BUTTON_ARRAY_PIN1) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD2) {
-    /* Button for [1, 3] */
+    /* Button for [0, 2] */
     move_queue = "A3";
   }
   else if (analogRead(BUTTON_ARRAY_PIN1) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD3) {
-    /* Button for [1, 5] */
+    /* Button for [0, 4] */
     move_queue = "A5";
   }
   else if (analogRead(BUTTON_ARRAY_PIN1) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD4) {
-    /* Button for [1, 7] */
+    /* Button for [0, 6] */
     move_queue = "A7";
   }
   else if (analogRead(BUTTON_ARRAY_PIN1) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD5) {
-    /* Button for [2, 2] */
+    /* Button for [1, 1] */
     move_queue = "B2";
   }
   else if (analogRead(BUTTON_ARRAY_PIN1) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD6) {
-    /* Button for [2, 4] */
+    /* Button for [1, 3] */
     move_queue = "B4";
   }
   else if (analogRead(BUTTON_ARRAY_PIN1) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD7) {
-    /* Button for [2, 6] */
+    /* Button for [1, 5] */
     move_queue = "B6";
   }
   else if (analogRead(BUTTON_ARRAY_PIN1) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD8) {
-    /* Button for [2, 8] */
+    /* Button for [1, 7] */
     move_queue = "B8";
   }
 
-  /* Button array 2 for rows 3 and 4 */
+  /* Button array 2 for rows 2 and 3 */
   if (analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD1) {
-    /* Button for [3, 1] */
+    /* Button for [2, 0] */
     move_queue = "C1";
   }
   else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD2) {
-    /* Button for [3, 3] */
+    /* Button for [2, 2] */
     move_queue = "C3";
   }
   else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD3) {
-    /* Button for [3, 5] */
+    /* Button for [2, 4] */
     move_queue = "C5";
   }
   else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD4) {
-    /* Button for [3, 7] */
+    /* Button for [2, 6] */
     move_queue = "C7";
   }
   else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD5) {
-    /* Button for [4, 2] */
+    /* Button for [3, 1] */
     move_queue = "D2";
   }
   else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD6) {
-    /* Button for [4, 4] */
+    /* Button for [3, 3] */
     move_queue = "D4";
   }
   else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD7) {
-    /* Button for [4, 6] */
+    /* Button for [3, 5] */
     move_queue = "D6";
   }
   else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD8) {
-    /* Button for [4, 8] */
+    /* Button for [3, 7] */
     move_queue = "D8";
   }
 
-  /* Button array 3 for rows 5 and 6 */
+  /* Button array 3 for rows 4 and 5 */
   if (analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD1) {
-    /* Button for [5, 1] */
+    /* Button for [4, 0] */
     move_queue = "E1";
   }
   else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD2) {
-    /* Button for [5, 3] */
+    /* Button for [4, 2] */
     move_queue = "E3";
   }
   else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD3) {
-    /* Button for [5, 5] */
+    /* Button for [4, 4] */
     move_queue = "E5";
   }
   else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD4) {
-    /* Button for [5, 7] */
+    /* Button for [4, 6] */
     move_queue = "E7";
   }
   else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD5) {
-    /* Button for [6, 2] */
+    /* Button for [5, 1] */
     move_queue = "F2";
   }
   else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD6) {
-    /* Button for [6, 4] */
+    /* Button for [5, 3] */
     move_queue = "F4";
   }
   else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD7) {
-    /* Button for [6, 6] */
+    /* Button for [5, 5] */
     move_queue = "F6";
   }
   else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD8) {
-    /* Button for [6, 8] */
+    /* Button for [5, 7] */
     move_queue = "F8";
   }
   
-  /* Button array 4 for rows 7 and 8 */
+  /* Button array 4 for rows 6 and 7 */
   if (analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD1) {
-    /* Button for [7, 1] */
+    /* Button for [6, 0] */
     move_queue = "G1";
   }
   else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD2) {
-    /* Button for [7, 3] */
+    /* Button for [6, 2] */
     move_queue = "G3";
   }
   else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD3) {
-    /* Button for [7, 5] */
+    /* Button for [6, 4] */
     move_queue = "G5";
   }
   else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD4) {
-    /* Button for [7, 7] */
+    /* Button for [6, 6] */
     move_queue = "G7";
   }
   else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD5) {
-    /* Button for [8, 2] */
+    /* Button for [7, 1] */
     move_queue = "H2";
   }
   else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD6) {
-    /* Button for [8, 4] */
+    /* Button for [7, 3] */
     move_queue = "H4";
   }
   else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD7) {
-    /* Button for [8, 6] */
+    /* Button for [7, 5] */
     move_queue = "H6";
   }
   else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD8) {
-    /* Button for [8, 8] */
+    /* Button for [7, 7] */
     move_queue = "H8";
   }
 
@@ -348,7 +377,7 @@ void IO_WinnerTurnIndicator(int winner) {
  * Initializes the game map LEDs
  *
  */
-void IO_InitGameMap() {
+void IO_InitHWGameMap() {
   /* Initialize the red LED max chip (via LED control) */
   red_lc.shutdown(0, false);
   red_lc.setIntensity(0, 15);
@@ -369,49 +398,61 @@ void IO_InitGameMap() {
  * Update the RGB LEDs corresponding to the game map
  *
  * @param checker_game: The checker game that the board is being retrieved from
- * @note UPDATE FOR PCB
+ * @note VERIFY THIS FUNCTION AND SEE IF IT WORKS WITH PCB
  */
 void IO_SetHWGameMap(Checkers checker_game) {
+  int max_row = -1;
+  int max_col = -1;
+
   /* Get game map from game algorithm and update */
   for (int row = 0; row < 8; row++) {
     for (int col = 0; col < 8; col++) {
-      switch (checker_game.Checkers_GetBoardAt(row, col)) {
-        case EMPTY_COLOR: /* No piece */
-          red_lc.setLed(0, row, col, false);
-          green_lc.setLed(0, row, col, false);
-          blue_lc.setLed(0, row, col, false);
-          Serial.print("0 ");
-          break;
-        case PLAYER1_COLOR: /* Player 1 regular piece */
-          /* Red */
-          red_lc.setLed(0, row, col, true);
-          green_lc.setLed(0, row, col, false);
-          blue_lc.setLed(0, row, col, false);
-          Serial.print("1 ");
-          break;
-        case PLAYER2_COLOR: /* Player 2 regular piece */
-          /* Blue */
-          red_lc.setLed(0, row, col, false);
-          green_lc.setLed(0, row, col, false);
-          blue_lc.setLed(0, row, col, true);
-          Serial.print("2 ");
-          break;
-        case PLAYER1_KING_COLOR: /* Player 1 king piece */
-          /* Yellow */
-          red_lc.setLed(0, row, col, true);
-          green_lc.setLed(0, row, col, true);
-          blue_lc.setLed(0, row, col, false);
-          Serial.print("3 ");
-          break;
-        case PLAYER2_KING_COLOR: /* Player 2 king piece */
-          /* Light Blue */
-          red_lc.setLed(0, row, col, false);
-          green_lc.setLed(0, row, col, true);
-          blue_lc.setLed(0, row, col, true);
-          Serial.print("4 ");
-          break;
-        default:
-          break;
+      if ((row + col) % 2 == 0) {
+        /* Get MAX chip row and column */
+        IO_MapToMaxChip(row, col, max_row, max_col);
+
+        switch (checker_game.Checkers_GetBoardAt(row, col)) {
+          case EMPTY_COLOR: /* No piece */
+            red_lc.setLed(0, max_row, max_col, false);
+            green_lc.setLed(0, max_row, max_col, false);
+            blue_lc.setLed(0, max_row, max_col, false);
+            Serial.print("0 ");
+            break;
+          case PLAYER1_COLOR: /* Player 1 regular piece */
+            /* Red */
+            red_lc.setLed(0, max_row, max_col, true);
+            green_lc.setLed(0, max_row, max_col, false);
+            blue_lc.setLed(0, max_row, max_col, false);
+            Serial.print("1 ");
+            break;
+          case PLAYER2_COLOR: /* Player 2 regular piece */
+            /* Blue */
+            red_lc.setLed(0, max_row, max_col, false);
+            green_lc.setLed(0, max_row, max_col, false);
+            blue_lc.setLed(0, max_row, max_col, true);
+            Serial.print("2 ");
+            break;
+          case PLAYER1_KING_COLOR: /* Player 1 king piece */
+            /* Yellow */
+            red_lc.setLed(0, max_row, max_col, true);
+            green_lc.setLed(0, max_row, max_col, true);
+            blue_lc.setLed(0, max_row, max_col, false);
+            Serial.print("3 ");
+            break;
+          case PLAYER2_KING_COLOR: /* Player 2 king piece */
+            /* Light Blue */
+            red_lc.setLed(0, max_row, max_col, false);
+            green_lc.setLed(0, max_row, max_col, true);
+            blue_lc.setLed(0, max_row, max_col, true);
+            Serial.print("4 ");
+            break;
+          default:
+            break;
+        }
+      }
+      else {
+        /* If it is an empty space, just print 0 to the terminal */
+        Serial.print("0 ");
       }
     }
     Serial.print("\n");

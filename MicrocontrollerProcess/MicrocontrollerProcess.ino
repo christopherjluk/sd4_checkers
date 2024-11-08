@@ -1,6 +1,7 @@
 /***********************************************************************************
  * @file MicrocontrollerProcess.ino
  * @brief The runnable file for the microcontroller to call all necessary functions
+ * @note Libraries needed - Adafruit_BluefruitLE_nRF51, ArduinoSTL, EspSoftwareSerial, LedControl
  ***********************************************************************************/
 
 /**********************************
@@ -43,6 +44,7 @@ void setup() {
   /* Pin setup */
   IO_InitButton();
   IO_InitTurnIndicator();
+  IO_InitHWGameMap();
 
   /* Global variable initializations */
   first_button_input = "";
@@ -105,7 +107,7 @@ void loop() {
     /* Set the game map LEDs */
     IO_SetHWGameMap(checkers_game);
 
-    delay(1000); /* DELETE FOR PCB */
+    delay(1000); /* IF LEDS ARE WORKING FOR PCB, THIS CAN BE DELETED */
   }
   else {
     /* Flash the turn indicator LED based on the winner until restarted */

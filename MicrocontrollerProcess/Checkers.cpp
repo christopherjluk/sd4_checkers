@@ -39,11 +39,11 @@ Checkers::Checkers() {
   for (int i = 0; i < 8; i++) {   /* For iterating through the rows */
     for (int j = 0; j < 8; j++) { /* For iterating through the columns */
       /* Initializes player 1's pieces */
-      if (i > 4 && ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1))) {
+      if (i > 4 && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) {
         board[i][j] = 1;
       }
       /* Initializes player 2's pieces */
-      else if (i < 3 && ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1))) {
+      else if (i < 3 && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) {
         board[i][j] = 2;
       }
       /* Initializes empty squares */
@@ -285,8 +285,8 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
   }
 
   /* If a move is to an invalid square, return that move was invalid */
-  if ((!(from[0] % 2 == 0 && from[1] % 2 == 1) && !(from[0] % 2 == 1 && from[1] % 2 == 0)) || /* Checks if from is valid */
-      (!(to[0] % 2 == 0 && to[1] % 2 == 1) && !(to[0] % 2 == 1 && to[1] % 2 == 0))) { /* Checks if to is valid */
+  if ((!(from[0] % 2 == 0 && from[1] % 2 == 0) && !(from[0] % 2 == 1 && from[1] % 2 == 1)) || /* Checks if from is valid */
+      (!(to[0] % 2 == 0 && to[1] % 2 == 0) && !(to[0] % 2 == 1 && to[1] % 2 == 1))) { /* Checks if to is valid */
     return 0;
   }
 
