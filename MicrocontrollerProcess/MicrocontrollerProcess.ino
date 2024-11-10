@@ -107,6 +107,7 @@ void loop() {
     /* Set the game map LEDs */
     IO_SetHWGameMap(checkers_game);
 
+    Serial.println(" "); /* THIS CAN BE DELETED LATER, THIS IS TO SPLIT UP THE GAME MAP */
     delay(1000); /* IF LEDS ARE WORKING FOR PCB, THIS CAN BE DELETED */
   }
   else {

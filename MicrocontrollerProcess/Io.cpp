@@ -76,17 +76,17 @@ void IO_MapToMaxChip(int row, int col, int &max_row, int &max_col);
  * @note VERIFY THIS FUNCTION AND SEE IF IT WORKS WITH PCB
  */
 void IO_MapToMaxChip(int row, int col, int &max_row, int &max_col) {
-  /* Rows will be on their orginal row divided by 2 on the MAX chip */
-  max_row = (int)(row / 2);
+  /* MAX rows will be on their orginal column divided by 2 on the MAX chip */
+  max_col = (int)(row / 2);
 
   /* Check if the row is even or odd to determine where the columns map to on the MAX chip */
   if (row % 2 == 0) {
-    /* Columns will take up the first 4 columns on the MAX chip if their row is divisible by 2 */
-    max_col = (int)(col / 2);
+    /* MAX rows will take up the first 4 rows on the MAX chip if their row is divisible by 2 */
+    max_row = (int)(col / 2);
   }
   else {
-    /* Columns will take up the last 4 columns on the MAX chip if their row is not divisible by 2 */
-    max_col = (int)((col / 2) + 4);
+    /* MAX rows will take up the last 4 rows on the MAX chip if their column is not divisible by 2 */
+    max_row = (int)((col / 2) + 4);
   }
 }
 
@@ -112,7 +112,7 @@ void IO_GetVoiceRecognitionInput(String (&move_command)[2]) {
   /* Get voice command from Voice Recognition module */
   String voice_command;
   VoiceRecognition_GetInput(voice_command);
-  
+
   /* Voice commands should be in the format of A1 B2. If not they should be cleared */
   if ((voice_command.charAt(0) >= 'A' && voice_command.charAt(0) <= 'H') &&
       (voice_command.charAt(1) >= '1' && voice_command.charAt(1) <= '8') &&
