@@ -21,6 +21,7 @@
 #define BUTTON_ARRAY_PIN2              (39)
 #define BUTTON_ARRAY_PIN3              (34)
 #define BUTTON_ARRAY_PIN4              (35)
+#define BUTTON_POWER_PIN               (32)
 #define PLAYER1_TURN_INDICATOR_LED_PIN (12)
 #define PLAYER2_TURN_INDICATOR_LED_PIN (13)
 
@@ -159,11 +160,14 @@ void IO_GetVoiceRecognitionInput(String test_input, String (&move_command)[2]) {
  * @param input_counter: The number of input pins
  * @param output_counter: The number of output pins
  */
-void IO_InitButton(int &pin_adder, int &input_counter, int &output_counter) {
+void IO_InitButton(int &pin_adder, int &input_counter, int &output_counter, int &low_counter, int &high_counter) {
   pinModeMock(BUTTON_ARRAY_PIN1, INPUT_MOCK, pin_adder, input_counter, output_counter);
   pinModeMock(BUTTON_ARRAY_PIN2, INPUT_MOCK, pin_adder, input_counter, output_counter);
   pinModeMock(BUTTON_ARRAY_PIN3, INPUT_MOCK, pin_adder, input_counter, output_counter);
   pinModeMock(BUTTON_ARRAY_PIN4, INPUT_MOCK, pin_adder, input_counter, output_counter);
+  pinModeMock(BUTTON_POWER_PIN, OUTPUT_MOCK, pin_adder, input_counter, output_counter);
+
+  digitalWriteMock(BUTTON_POWER_PIN, HIGH_MOCK, pin_adder, low_counter, high_counter);
 }
 
 /**

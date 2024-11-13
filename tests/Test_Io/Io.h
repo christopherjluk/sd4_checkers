@@ -28,7 +28,7 @@ void IO_ConvertMapToIndices(String (&move_string)[2], int (&move_int)[2][2]);
 void IO_GetVoiceRecognitionInput(String test_input, String (&move_command)[2]);
 
 /* Button functions */
-void  IO_InitButton(int &pin_adder, int &input_counter, int &output_counter);
+void  IO_InitButton(int &pin_adder, int &input_counter, int &output_counter, int &low_counter, int &high_counter);
 
 /* Turn Indicator LED functions */
 void IO_InitTurnIndicator(int &pin_adder, int &input_counter, int &output_counter);

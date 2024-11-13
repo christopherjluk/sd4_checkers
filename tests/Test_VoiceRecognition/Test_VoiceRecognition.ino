@@ -110,8 +110,22 @@ test(VoiceRecognition_Init_Success) {
 }
 
 /**
- *
+ * VoiceRecognition_GetInput tests
  **/
+test(VoiceRecognition_GetInput_NotConnected) {
+  String parsed_checker_move = "";
+  VoiceRecognition_GetInput(parsed_checker_move, false, "A3 B6");
+  assertEqual(parsed_checker_move, "");
+}
+
+test(VoiceRecognition_GetInput_Success) {
+  String parsed_checker_move = "";
+  VoiceRecognition_GetInput(parsed_checker_move, true, "A3 B6");
+  assertEqual(parsed_checker_move, "A3 B6");
+
+  VoiceRecognition_GetInput(parsed_checker_move, true, "AD3 B16 CAT");
+  assertEqual(parsed_checker_move, "AD3 B16");
+}
 
 /**********************************
  ** Function Definitions

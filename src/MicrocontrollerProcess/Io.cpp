@@ -24,6 +24,7 @@
 #define BUTTON_ARRAY_PIN2              (39)
 #define BUTTON_ARRAY_PIN3              (34)
 #define BUTTON_ARRAY_PIN4              (35)
+#define BUTTON_POWER_PIN               (32)
 #define PLAYER1_TURN_INDICATOR_LED_PIN (12)
 #define PLAYER2_TURN_INDICATOR_LED_PIN (13)
 #define LED_MAX_CHIP_RED_PIN           (33)
@@ -137,6 +138,9 @@ void IO_InitButton() {
   pinMode(BUTTON_ARRAY_PIN2, INPUT);
   pinMode(BUTTON_ARRAY_PIN3, INPUT);
   pinMode(BUTTON_ARRAY_PIN4, INPUT);
+  pinMode(BUTTON_POWER_PIN, OUTPUT);
+
+  digitalWrite(BUTTON_POWER_PIN, HIGH);
 }
 
 /**

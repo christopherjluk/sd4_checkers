@@ -80,7 +80,7 @@ bool BleEchoMock(bool echo) {
 }
 
 /**
- * This function mock a BLE info call
+ * This function will mock a BLE info call
  *
  */
 void BleInfoMock() {
@@ -99,6 +99,45 @@ bool BleSetModeMock(bool data) {
   }
 
   return false;
+}
+
+/**
+ * This function will mock a BLE IsConnected call
+ *
+ * @param connected: The connection status mock
+ * @return bool: Whether the BLE is connected
+ */
+bool BleIsConnectedMock(bool connected) {
+  if (connected == true) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * This function will mock a BLE available call
+ *
+ * @param input: The input to check whether there is still a string to parse through
+ * @return bool: Whether there is data to parse through
+ */
+bool BleAvailableMock(String input) {
+  if (input.length() == 0) {
+    return false;
+  }
+
+  return true;
+}
+
+char BleReadMock(String &input) {
+  char ret_val;
+
+  if (input.length() != 0) {
+    ret_val = input.charAt(0);
+    input.remove(0, 1);
+  }
+
+  return ret_val;
 }
 
 /**********************************
@@ -184,4 +223,26 @@ void VoiceRecognition_Init(bool &correct_functions_called, String &recent_error,
   if (correct_functions_called == true) {
     correct_functions_called = BleSetModeMock(data);
   }
+}
+
+/**
+ * Receives checker move from BLE and parse to return to IO
+ *
+ * @param parsed_checker_move: The String that returns a checker move
+ * @param connection: The mocked BLE connection status
+ */
+void VoiceRecognition_GetInput(String &parsed_checker_move, bool connection, String input_data) {
+  String checker_move = "";
+  String input_reading = input_data;
+
+  /* Check for data if BLE is connected */
+  if (BleIsConnectedMock(connection)) {
+    while (BleAvailableMock(input_reading)) {
+      /* Read and process incoming data */
+      char received_data = BleReadMock(input_reading);
+      checker_move += received_data;
+    }
+  }
+
+  VoiceRecognition_ParseMoves(checker_move, parsed_checker_move);
 }

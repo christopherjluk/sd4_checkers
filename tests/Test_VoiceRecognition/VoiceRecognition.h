@@ -22,5 +22,6 @@ void VoiceRecognition_ParseMoves(String moves, String &result);
 
 /* Public functions in the source */
 void VoiceRecognition_Init(bool &correct_functions_called, String &recent_error, int baud_rate, bool verbose_mode, bool factory_reset_en, bool factory_reset, bool echo, bool data);
+void VoiceRecognition_GetInput(String &parsed_checker_move, bool connection, String input_data);
 
 #endif /* VOICERECOGNITION_H */

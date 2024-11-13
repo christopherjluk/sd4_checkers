@@ -134,13 +134,17 @@ test(IO_InitButton_Success) {
   int pin_adder = 0;
   int input_counter = 0;
   int output_counter = 0;
+  int low_counter = 0;
+  int high_counter = 0;
 
-  IO_InitButton(pin_adder, input_counter, output_counter);
+  IO_InitButton(pin_adder, input_counter, output_counter, low_counter, high_counter);
 
-  /* Verify the pins called and the inputs and outputs set are correct */
-  assertEqual(pin_adder, 144);
+  /* Verify the pins called and the inputs and outputs set are correct, along with the low and high */
+  assertEqual(pin_adder, 176);
   assertEqual(input_counter, 4);
-  assertEqual(output_counter, 0);
+  assertEqual(output_counter, 1);
+  assertEqual(low_counter, 0);
+  assertEqual(high_counter, 1);
 }
 
 /**
