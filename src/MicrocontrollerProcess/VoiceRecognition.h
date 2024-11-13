@@ -1,5 +1,5 @@
 /************************************************************
- * @file VoiceRecognition.cpp
+ * @file VoiceRecognition.h
  * @brief The header for the Voice Recognition algorithm
  ************************************************************/
 #ifndef VOICERECOGNITION_H

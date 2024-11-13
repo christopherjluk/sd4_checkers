@@ -91,7 +91,7 @@ void VoiceRecognition_Init() {
 
   /* Optional factory reset */
   if (FACTORYRESET_ENABLE && !ble.factoryReset()) {
-      VoiceRecognition_OutputError(F("Couldn't factory reset"));
+    VoiceRecognition_OutputError(F("Couldn't factory reset"));
   }
 
   /* Disable command echo from Bluefruit */

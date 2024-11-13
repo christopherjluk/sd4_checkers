@@ -74,6 +74,7 @@ test(IO_ConvertMapToIndices_Success) {
   IO_ConvertMapToIndices(move_string_4, move_int_4);
   IO_ConvertMapToIndices(move_string_5, move_int_5);
 
+  /* Verify integer array is equivalent to expected values */
   assertEqual(move_int_1[0][0], 0);
   assertEqual(move_int_1[0][1], 0);
   assertEqual(move_int_1[1][0], 1);
@@ -115,6 +116,7 @@ test(IO_GetVoiceRecognitionInput_Success) {
   IO_GetVoiceRecognitionInput(test_input_3, move_command_3);
   IO_GetVoiceRecognitionInput(test_input_4, move_command_4);
 
+  /* Verify outputted move command is equivalent to expected values */
   assertEqual(move_command_1[0], "A1");
   assertEqual(move_command_1[1], "B2");
   assertEqual(move_command_2[0], "");
@@ -135,6 +137,7 @@ test(IO_InitButton_Success) {
 
   IO_InitButton(pin_adder, input_counter, output_counter);
 
+  /* Verify the pins called and the inputs and outputs set are correct */
   assertEqual(pin_adder, 144);
   assertEqual(input_counter, 4);
   assertEqual(output_counter, 0);
@@ -154,6 +157,7 @@ test(IO_InitTurnIndicator_Success) {
 
   IO_InitTurnIndicator(pin_adder, input_counter, output_counter);
 
+  /* Verify the pins called and the inputs and outputs set are correct */
   assertEqual(pin_adder, 25);
   assertEqual(input_counter, 0);
   assertEqual(output_counter, 2);
@@ -170,6 +174,7 @@ test(IO_SetTurnIndicator_Success) {
 
   IO_SetTurnIndicator(1, pin_adder, low_counter, high_counter);
 
+  /* Verify the pins called and the lows and highs set are correct */
   assertEqual(pin_adder, 25);
   assertEqual(low_counter, 1);
   assertEqual(high_counter, 1);
@@ -181,6 +186,7 @@ test(IO_SetTurnIndicator_Success) {
 
   IO_SetTurnIndicator(2, pin_adder, low_counter, high_counter);
 
+  /* Verify the pins called and the lows and highs set are correct */
   assertEqual(pin_adder, 25);
   assertEqual(low_counter, 1);
   assertEqual(high_counter, 1);
@@ -198,6 +204,7 @@ test(IO_BlinkTurnIndicator_Success) {
 
   IO_BlinkTurnIndicator(1, pin_adder, low_counter, high_counter, delay_adder);
 
+  /* Verify the pins called and the lows and highs set are correct with the delays set to the correct times */
   assertEqual(pin_adder, 48);
   assertEqual(low_counter, 2);
   assertEqual(high_counter, 2);
@@ -211,6 +218,7 @@ test(IO_BlinkTurnIndicator_Success) {
 
   IO_BlinkTurnIndicator(2, pin_adder, low_counter, high_counter, delay_adder);
 
+  /* Verify the pins called and the lows and highs set are correct with the delays set to the correct times */
   assertEqual(pin_adder, 52);
   assertEqual(low_counter, 2);
   assertEqual(high_counter, 2);
@@ -229,6 +237,7 @@ test(IO_WinnerTurnIndicator_Success) {
 
   IO_WinnerTurnIndicator(1, pin_adder, low_counter, high_counter, delay_adder);
 
+  /* Verify the pins called and the lows and highs set are correct with the delays set to the correct times */
   assertEqual(pin_adder, 37);
   assertEqual(low_counter, 2);
   assertEqual(high_counter, 1);
@@ -242,6 +251,7 @@ test(IO_WinnerTurnIndicator_Success) {
 
   IO_WinnerTurnIndicator(2, pin_adder, low_counter, high_counter, delay_adder);
 
+  /* Verify the pins called and the lows and highs set are correct with the delays set to the correct times */
   assertEqual(pin_adder, 38);
   assertEqual(low_counter, 2);
   assertEqual(high_counter, 1);
