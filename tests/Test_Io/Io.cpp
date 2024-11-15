@@ -31,6 +31,18 @@
 #define LOW_MOCK    (1)
 #define HIGH_MOCK   (2)
 
+/* LED control mocks */
+#define RED_MOCK   (1)
+#define BLUE_MOCK  (2)
+#define GREEN_MOCK (3)
+
+/* Colors */
+#define EMPTY_COLOR        (0)
+#define PLAYER1_COLOR      (1)
+#define PLAYER2_COLOR      (2)
+#define PLAYER1_KING_COLOR (3)
+#define PLAYER2_KING_COLOR (4)
+
 /**********************************
  ** Global Variables
  **********************************/
@@ -86,6 +98,133 @@ void digitalWriteMock(int pin, int output, int &pin_adder, int &low_counter, int
  */
 void delayMock(int time, int &delay_adder) {
   delay_adder += time;
+}
+
+/**
+ * This function will mock a lc shutdown call
+ *
+ * @param color: The mocked color being called
+ * @param device_num: The number of the device in the LC
+ * @param shutdown: Whether it is shutdown mode or not
+ * @param red_counter: How many times the red LC was called
+ * @param blue_counter: How many times the blue LC was called
+ * @param green_counter: How many times the green LC was called
+ * @return bool: Whether the function was called correctly
+ */
+bool lcShutdownMock(int color, int device_num, bool shutdown, int &red_counter, int &blue_counter, int &green_counter) {
+  if (color == RED_MOCK) {
+    red_counter++;
+  }
+  else if (color == BLUE_MOCK) {
+    blue_counter++;
+  }
+  else if (color == GREEN_MOCK) {
+    green_counter++;
+  }
+
+  if (device_num == 0 && shutdown == false) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * This function will mock a lc set intensity call
+ *
+ * @param color: The mocked color being called
+ * @param device_num: The number of the device in the LC
+ * @param intensity: The intensity of the LED
+ * @param red_counter: How many times the red LC was called
+ * @param blue_counter: How many times the blue LC was called
+ * @param green_counter: How many times the green LC was called
+ * @return bool: Whether the function was called correctly
+ */
+bool lcSetIntensityMock(int color, int device_num, int intensity, int &red_counter, int &blue_counter, int &green_counter) {
+  if (color == RED_MOCK) {
+    red_counter++;
+  }
+  else if (color == BLUE_MOCK) {
+    blue_counter++;
+  }
+  else if (color == GREEN_MOCK) {
+    green_counter++;
+  }
+
+  if (device_num == 0 && intensity == 15) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * This function will mock a lc clear display call
+ *
+ * @param color: The mocked color being called
+ * @param device_num: The number of the device in the LC
+ * @param red_counter: How many times the red LC was called
+ * @param blue_counter: How many times the blue LC was called
+ * @param green_counter: How many times the green LC was called
+ * @return bool: Whether the function was called correctly
+ */
+bool lcClearDisplayMock(int color, int device_num, int &red_counter, int &blue_counter, int &green_counter) {
+  if (color == RED_MOCK) {
+    red_counter++;
+  }
+  else if (color == BLUE_MOCK) {
+    blue_counter++;
+  }
+  else if (color == GREEN_MOCK) {
+    green_counter++;
+  }
+
+  if (device_num == 0) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * This function will mock a lc set led call
+ *
+ * @param color: The mocked color being called
+ * @param device_num: The number of the device in the LC
+ * @param row: The MAX row to set
+ * @param col: The MAX col to set
+ * @param status: The status to set the LEDs
+ * @param red_counter: How many times the red LC was called
+ * @param blue_counter: How many times the blue LC was called
+ * @param green_counter: How many times the green LC was called
+ * @param true_counter: How many trues were called
+ * @param row_counter: The rows added up
+ * @param col_counter: The cols added up
+ * @return bool: Whether the function was called correctly
+ */
+bool lcSetLedMock(int color, int device_num, int row, int col, bool status, int &red_counter, int &blue_counter, int &green_counter, int &true_counter, int &row_adder, int &col_adder) {
+  if (color == RED_MOCK) {
+    red_counter++;
+  }
+  else if (color == BLUE_MOCK) {
+    blue_counter++;
+  }
+  else if (color == GREEN_MOCK) {
+    green_counter++;
+  }
+
+  if (status == true) {
+    true_counter++;
+  }
+
+  row_adder += row;
+  col_adder += col;
+
+  if (device_num == 0) {
+    return true;
+  }
+
+  return false;
 }
 
 /**********************************
@@ -260,5 +399,138 @@ void IO_WinnerTurnIndicator(int winner, int &pin_adder, int &low_counter, int &h
     delayMock(1000, delay_adder);
     digitalWriteMock(PLAYER2_TURN_INDICATOR_LED_PIN, LOW_MOCK, pin_adder, low_counter, high_counter);
     delayMock(1000, delay_adder);
+  }
+}
+
+/**
+ * Initializes the game map LEDs
+ *
+ * @param function_called_correctly: Whether the function was called correctly or not
+ * @param red_counter: How many times the red LC was called
+ * @param blue_counter: How many times the blue LC was called
+ * @param green_counter: How many times the green LC was called
+ */
+void IO_InitHWGameMap(bool &function_called_correctly, int &red_counter, int &blue_counter, int &green_counter) {
+  /* Initialize the red LED max chip (via LED control) */
+  function_called_correctly = lcShutdownMock(RED_MOCK, 0, false, red_counter, blue_counter, green_counter);
+  if (function_called_correctly == true) {
+    function_called_correctly = lcSetIntensityMock(RED_MOCK, 0, 15, red_counter, blue_counter, green_counter);
+  }
+  if (function_called_correctly == true) {
+    function_called_correctly = lcClearDisplayMock(RED_MOCK, 0, red_counter, blue_counter, green_counter);
+  }
+
+  /* Initialize the blue LED max chip (via LED control) */
+  if (function_called_correctly == true) {
+    function_called_correctly = lcShutdownMock(BLUE_MOCK, 0, false, red_counter, blue_counter, green_counter);
+  }
+  if (function_called_correctly == true) {
+    function_called_correctly = lcSetIntensityMock(BLUE_MOCK, 0, 15, red_counter, blue_counter, green_counter);
+  }
+  if (function_called_correctly == true) {
+    function_called_correctly = lcClearDisplayMock(BLUE_MOCK, 0, red_counter, blue_counter, green_counter);
+  }
+
+  /* Initialize the green LED max chip (via LED control) */
+  if (function_called_correctly == true) {
+    function_called_correctly = lcShutdownMock(GREEN_MOCK, 0, false, red_counter, blue_counter, green_counter);
+  }
+  if (function_called_correctly == true) {
+    function_called_correctly = lcSetIntensityMock(GREEN_MOCK, 0, 15, red_counter, blue_counter, green_counter);
+  }
+  if (function_called_correctly == true) {
+    function_called_correctly = lcClearDisplayMock(GREEN_MOCK, 0, red_counter, blue_counter, green_counter);
+  }
+}
+
+/**
+ * Update the RGB LEDs corresponding to the game map
+ *
+ * @param mocked_board: The mocked game map board to use
+ * @param function_called_correctly: Whether the function was called correctly
+ * @param red_counter: How many times the red LC was called
+ * @param blue_counter: How many times the blue LC was called
+ * @param green_counter: How many times the green LC was called
+ * @param true_counter: How many times the LEDs are set
+ * @param row_adder: The sum of the rows set
+ * @param col_adder: The sum of the cols set
+ */
+void IO_SetHWGameMap(int (&mocked_board)[8][8], bool &function_called_correctly, int &red_counter, int &blue_counter, int &green_counter, int &true_counter, int &row_adder, int &col_adder) {
+  int max_row = -1;
+  int max_col = -1;
+  function_called_correctly = true;
+
+  /* Get game map from game algorithm and update */
+  for (int row = 0; row < 8; row++) {
+    for (int col = 0; col < 8; col++) {
+      if ((row + col) % 2 == 0) {
+        /* Get MAX chip row and column */
+        IO_MapToMaxChip(row, col, max_row, max_col);
+
+        switch (mocked_board[row][col]) {
+          case EMPTY_COLOR: /* No piece */
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(RED_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(GREEN_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(BLUE_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            break;
+          case PLAYER1_COLOR: /* Player 1 regular piece */
+            /* Red */
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(RED_MOCK, 0, max_row, max_col, true, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(GREEN_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(BLUE_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            break;
+          case PLAYER2_COLOR: /* Player 2 regular piece */
+            /* Blue */
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(RED_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(GREEN_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(BLUE_MOCK, 0, max_row, max_col, true, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            break;
+          case PLAYER1_KING_COLOR: /* Player 1 king piece */
+            /* Yellow */
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(RED_MOCK, 0, max_row, max_col, true, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(GREEN_MOCK, 0, max_row, max_col, true, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(BLUE_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            break;
+          case PLAYER2_KING_COLOR: /* Player 2 king piece */
+            /* Light Blue */
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(RED_MOCK, 0, max_row, max_col, false, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(GREEN_MOCK, 0, max_row, max_col, true, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            if (function_called_correctly == true) {
+              function_called_correctly = lcSetLedMock(BLUE_MOCK, 0, max_row, max_col, true, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    }
   }
 }

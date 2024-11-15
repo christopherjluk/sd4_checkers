@@ -36,4 +36,8 @@ void IO_SetTurnIndicator(int player_turn, int &pin_adder, int &low_counter, int 
 void IO_BlinkTurnIndicator(int player_turn, int &pin_adder, int &low_counter, int &high_counter, int &delay_adder);
 void IO_WinnerTurnIndicator(int winner, int &pin_adder, int &low_counter, int &high_counter, int &delay_adder);
 
+/* Game Map LED functions */
+void IO_InitHWGameMap(bool &function_called_correctly, int &red_counter, int &blue_counter, int &green_counter);
+void IO_SetHWGameMap(int (&mocked_board)[8][8], bool &function_called_correctly, int &red_counter, int &blue_counter, int &green_counter, int &true_counter, int &row_adder, int &col_adder);
+
 #endif /* IO_H */

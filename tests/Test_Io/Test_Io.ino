@@ -265,10 +265,61 @@ test(IO_WinnerTurnIndicator_Success) {
 /**
  * IO_InitHWGameMap tests
  **/
+test(IO_InitHWGameMap_Success) {
+  bool function_called_correctly = false;
+  int red_counter = 0;
+  int blue_counter = 0;
+  int green_counter = 0;
+  
+  IO_InitHWGameMap(function_called_correctly, red_counter, blue_counter, green_counter);
+
+  assertEqual(function_called_correctly, true);
+  assertEqual(red_counter, 3);
+  assertEqual(blue_counter, 3);
+  assertEqual(green_counter, 3);
+}
 
 /**
  * IO_SetHWGameMap tests
  **/
+test(IO_SetHWGameMap_Success) {
+  int board[8][8];
+  
+  for (int i = 0; i < 8; i++) {   /* For iterating through the rows */
+    for (int j = 0; j < 8; j++) { /* For iterating through the columns */
+      /* Initializes player 1's pieces */
+      if (i > 4 && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) {
+        board[i][j] = 1;
+      }
+      /* Initializes player 2's pieces */
+      else if (i < 3 && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) {
+        board[i][j] = 2;
+      }
+      /* Initializes empty squares */
+      else {
+        board[i][j] = 0;
+      }
+    }
+  }
+
+  bool function_called_correctly = false;
+  int red_counter = 0;
+  int blue_counter = 0;
+  int green_counter = 0;
+  int true_counter = 0;
+  int row_adder = 0;
+  int col_adder = 0;
+
+  IO_SetHWGameMap(board, function_called_correctly, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
+
+  assertEqual(function_called_correctly, true);
+  assertEqual(red_counter, 64);
+  assertEqual(blue_counter, 64);
+  assertEqual(green_counter, 64);
+  assertEqual(true_counter, 24);
+  assertEqual(row_adder, 336);
+  assertEqual(col_adder, 144);
+}
 
 /**********************************
  ** Function Definitions
