@@ -203,11 +203,14 @@ void Process_Loop(bool win, bool voice_rec, String (&move)[2], int active_player
 
       move_queue = IOGetButtonInputMock(move[1]);
       if (first_button_input != "" && move_queue != "") {
-        /* Store move in array */
-        move_command[0] = first_button_input;
-        move_command[1] = move_queue;
-        first_button_input = "";
-        move_queue = "";
+        /* If read button is the same as the first move, ignore as debouncing may not be detected yet */
+        if (first_button_input != move_queue) {
+          /* Store move in array */
+          move_command[0] = first_button_input;
+          move_command[1] = move_queue;
+          first_button_input = "";
+          move_queue = "";
+        }
       }
     }
     /* Clear the first button move (first_button_input) if a voice command gets received */
@@ -267,9 +270,17 @@ test(Process_Loop_VoiceRec_Success) {
   assertEqual(winner, 0);
 }
 
-test(Process_Loop_ButtonInput_Success) {
+test(Process_Loop_ButtonInput_Different_Success) {
   int winner = 0;
   String move_command[2] = {"A1", "B2"};
+
+  Process_Loop(false, false, move_command, 1, winner);
+  assertEqual(winner, 0);
+}
+
+test(Process_Loop_ButtonInput_Same_Success) {
+  int winner = 0;
+  String move_command[2]  = {"A1", "A1"};
 
   Process_Loop(false, false, move_command, 1, winner);
   assertEqual(winner, 0);
