@@ -33,16 +33,16 @@
 #define LED_MAX_CHIP_CS_PIN            (27)
 #define LED_MAX_CHIP_CLK_PIN           (14)
 
-/* Button array thresholds (UPDATE FOR PCB) */
-#define BUTTON_THRESHOLD1 (5)
-#define BUTTON_THRESHOLD2 (10)
-#define BUTTON_THRESHOLD3 (15)
-#define BUTTON_THRESHOLD4 (20)
-#define BUTTON_THRESHOLD5 (25)
-#define BUTTON_THRESHOLD6 (30)
-#define BUTTON_THRESHOLD7 (35)
-#define BUTTON_THRESHOLD8 (40)
-#define ANALOG_READ_MAX   (4096)
+/* Button array thresholds */
+#define BUTTON_THRESHOLD1 (40)
+#define BUTTON_THRESHOLD2 (250)
+#define BUTTON_THRESHOLD3 (800)
+#define BUTTON_THRESHOLD4 (1400)
+#define BUTTON_THRESHOLD5 (1850)
+#define BUTTON_THRESHOLD6 (2250)
+#define BUTTON_THRESHOLD7 (2700)
+#define BUTTON_THRESHOLD8 (3300)
+#define ANALOG_READ_MAX   (4095)
 
 /* Colors */
 #define EMPTY_COLOR        (0)
@@ -147,10 +147,13 @@ void IO_InitButton() {
  * Checks if any buttons have been pressed
  *
  * @return String: The string command to return
- * @note VERIFY THIS FUNCTION WITH PCB
  */
 String IO_GetButtonInput() {
   String move_queue = "";
+  bool button1_pressed = true;
+  bool button2_pressed = true;
+  bool button3_pressed = true;
+  bool button4_pressed = true;
   
   /* Button array 1 for rows 0 and 1 */
   if (analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD1) {
@@ -185,39 +188,47 @@ String IO_GetButtonInput() {
     /* Button for [1, 7] */
     move_queue = "B8";
   }
+  else {
+    /* Button in the first row of buttons were not pressed */
+    button1_pressed = false;
+  }
 
   /* Button array 2 for rows 2 and 3 */
   if (analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD1) {
     /* Button for [2, 0] */
     move_queue = "C1";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD2) {
+  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD2) {
     /* Button for [2, 2] */
     move_queue = "C3";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD3) {
+  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD3) {
     /* Button for [2, 4] */
     move_queue = "C5";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD4) {
+  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD4) {
     /* Button for [2, 6] */
     move_queue = "C7";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD5) {
+  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD5) {
     /* Button for [3, 1] */
     move_queue = "D2";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD6) {
+  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD6) {
     /* Button for [3, 3] */
     move_queue = "D4";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD7) {
+  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD7) {
     /* Button for [3, 5] */
     move_queue = "D6";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD8) {
+  else if (analogRead(BUTTON_ARRAY_PIN2) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN2) < BUTTON_THRESHOLD8) {
     /* Button for [3, 7] */
     move_queue = "D8";
+  }
+  else {
+    /* Button in the second row of buttons were not pressed */
+    button2_pressed = false;
   }
 
   /* Button array 3 for rows 4 and 5 */
@@ -225,33 +236,37 @@ String IO_GetButtonInput() {
     /* Button for [4, 0] */
     move_queue = "E1";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD2) {
+  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD2) {
     /* Button for [4, 2] */
     move_queue = "E3";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD3) {
+  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD3) {
     /* Button for [4, 4] */
     move_queue = "E5";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD4) {
+  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD4) {
     /* Button for [4, 6] */
     move_queue = "E7";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD5) {
+  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD5) {
     /* Button for [5, 1] */
     move_queue = "F2";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD6) {
+  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD6) {
     /* Button for [5, 3] */
     move_queue = "F4";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD7) {
+  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD7) {
     /* Button for [5, 5] */
     move_queue = "F6";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD8) {
+  else if (analogRead(BUTTON_ARRAY_PIN3) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN3) < BUTTON_THRESHOLD8) {
     /* Button for [5, 7] */
     move_queue = "F8";
+  }
+  else {
+    /* Button in the third row of buttons were not pressed */
+    button3_pressed = false;
   }
   
   /* Button array 4 for rows 6 and 7 */
@@ -259,40 +274,48 @@ String IO_GetButtonInput() {
     /* Button for [6, 0] */
     move_queue = "G1";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD2) {
+  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD1 && analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD2) {
     /* Button for [6, 2] */
     move_queue = "G3";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD3) {
+  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD2 && analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD3) {
     /* Button for [6, 4] */
     move_queue = "G5";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD4) {
+  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD3 && analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD4) {
     /* Button for [6, 6] */
     move_queue = "G7";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD5) {
+  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD4 && analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD5) {
     /* Button for [7, 1] */
     move_queue = "H2";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD6) {
+  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD5 && analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD6) {
     /* Button for [7, 3] */
     move_queue = "H4";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD7) {
+  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD6 && analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD7) {
     /* Button for [7, 5] */
     move_queue = "H6";
   }
-  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN1) < BUTTON_THRESHOLD8) {
+  else if (analogRead(BUTTON_ARRAY_PIN4) > BUTTON_THRESHOLD7 && analogRead(BUTTON_ARRAY_PIN4) < BUTTON_THRESHOLD8) {
     /* Button for [7, 7] */
     move_queue = "H8";
   }
+  else {
+    /* Button in the fourth row of buttons were not pressed */
+    button4_pressed = false;
+  }
 
   /* Verify only one output pin is getting one accepted analog reading at a time */
-  if (analogRead(BUTTON_ARRAY_PIN1) < ANALOG_READ_MAX && analogRead(BUTTON_ARRAY_PIN2) < ANALOG_READ_MAX &&
-      analogRead(BUTTON_ARRAY_PIN3) < ANALOG_READ_MAX && analogRead(BUTTON_ARRAY_PIN4) < ANALOG_READ_MAX) {
+  if ((button1_pressed == true && button2_pressed == true) || (button1_pressed == true && button3_pressed == true) ||
+      (button1_pressed == true && button4_pressed == true) || (button2_pressed == true && button3_pressed == true) ||
+      (button2_pressed == true && button4_pressed == true) || (button3_pressed == true && button4_pressed == true)) {
     move_queue = "";
   }
+
+  /* Delay to account for button press and debounce */
+  delay(100);
   
   return move_queue;
 }

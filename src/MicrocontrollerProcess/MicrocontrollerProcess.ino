@@ -75,11 +75,14 @@ void loop() {
         move_queue = "";
       }
       else if (first_button_input != "" && move_queue != "") {
-        /* Store move in array */
-        move_command[0] = first_button_input;
-        move_command[1] = move_queue;
-        first_button_input = "";
-        move_queue = "";
+        /* If read button is the same as the first move, ignore as debouncing may not be detected yet */
+        if (move_queue != first_button_input) {
+          /* Store move in array */
+          move_command[0] = first_button_input;
+          move_command[1] = move_queue;
+          first_button_input = "";
+          move_queue = "";
+        }
       }
     }
     /* Clear the first button move (first_button_input) if a voice command gets received */
