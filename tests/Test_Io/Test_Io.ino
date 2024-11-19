@@ -150,6 +150,171 @@ test(IO_InitButton_Success) {
 /**
  * IO_GetButtonInput tests
  **/
+test(IO_GetButtonInput_MultiplePress_Success) {
+  int pin_adder = 0;
+  int reading_adder = 0;
+  int delay_adder = 0;
+
+  int reading[4] = {25, 25, 4095, 4095};
+
+  String move_queue = IO_GetButtonInput(reading, pin_adder, reading_adder, delay_adder);
+
+  assertEqual(move_queue, "");
+  assertEqual(pin_adder, 144);
+  assertEqual(reading_adder, 8240);
+  assertEqual(delay_adder, 100);
+}
+
+test(IO_GetButtonInput_NoPress_Success) {
+  int pin_adder = 0;
+  int reading_adder = 0;
+  int delay_adder = 0;
+
+  int reading[4] = {4095, 4095, 4095, 4095};
+
+  String move_queue = IO_GetButtonInput(reading, pin_adder, reading_adder, delay_adder);
+
+  assertEqual(move_queue, "");
+  assertEqual(pin_adder, 144);
+  assertEqual(reading_adder, 16380);
+  assertEqual(delay_adder, 100);
+}
+
+test(IO_GetButtonInput_RegularPress1_Success) {
+  int pin_adder = 0;
+  int reading_adder = 0;
+  int delay_adder = 0;
+  String expected_move = "";
+
+  int reading[4] = {4095, 4095, 4095, 4095};
+  int intervals[8] = {0, 125, 670, 1250, 1700, 2100, 2550, 2930};
+
+  for (int i = 0; i < 8; i++) {
+    pin_adder = 0;
+    reading_adder = 0;
+    delay_adder = 0;
+    expected_move = "";
+
+    reading[0] = intervals[i];
+    String move_queue = IO_GetButtonInput(reading, pin_adder, reading_adder, delay_adder);
+
+    if (i < 4) {
+      expected_move += 'A';
+      expected_move += (char)((i * 2) + 49);
+    }
+    else {
+      expected_move += 'B';
+      expected_move += (char)((i * 2) + 42);
+    }
+
+    assertEqual(move_queue, expected_move);
+    assertEqual(pin_adder, 144);
+    assertEqual(reading_adder, 12285 + intervals[i]);
+    assertEqual(delay_adder, 100);
+  }
+}
+
+test(IO_GetButtonInput_RegularPress2_Success) {
+  int pin_adder = 0;
+  int reading_adder = 0;
+  int delay_adder = 0;
+  String expected_move = "";
+
+  int reading[4] = {4095, 4095, 4095, 4095};
+  int intervals[8] = {0, 125, 670, 1250, 1700, 2100, 2550, 2930};
+
+  for (int i = 0; i < 8; i++) {
+    pin_adder = 0;
+    reading_adder = 0;
+    delay_adder = 0;
+    expected_move = "";
+
+    reading[1] = intervals[i];
+    String move_queue = IO_GetButtonInput(reading, pin_adder, reading_adder, delay_adder);
+
+    if (i < 4) {
+      expected_move += 'C';
+      expected_move += (char)((i * 2) + 49);
+    }
+    else {
+      expected_move += 'D';
+      expected_move += (char)((i * 2) + 42);
+    }
+
+    assertEqual(move_queue, expected_move);
+    assertEqual(pin_adder, 144);
+    assertEqual(reading_adder, 12285 + intervals[i]);
+    assertEqual(delay_adder, 100);
+  }
+}
+
+test(IO_GetButtonInput_RegularPress3_Success) {
+  int pin_adder = 0;
+  int reading_adder = 0;
+  int delay_adder = 0;
+  String expected_move = "";
+
+  int reading[4] = {4095, 4095, 4095, 4095};
+  int intervals[8] = {0, 125, 670, 1250, 1700, 2100, 2550, 2930};
+
+  for (int i = 0; i < 8; i++) {
+    pin_adder = 0;
+    reading_adder = 0;
+    delay_adder = 0;
+    expected_move = "";
+
+    reading[2] = intervals[i];
+    String move_queue = IO_GetButtonInput(reading, pin_adder, reading_adder, delay_adder);
+
+    if (i < 4) {
+      expected_move += 'E';
+      expected_move += (char)((i * 2) + 49);
+    }
+    else {
+      expected_move += 'F';
+      expected_move += (char)((i * 2) + 42);
+    }
+
+    assertEqual(move_queue, expected_move);
+    assertEqual(pin_adder, 144);
+    assertEqual(reading_adder, 12285 + intervals[i]);
+    assertEqual(delay_adder, 100);
+  }
+}
+
+test(IO_GetButtonInput_RegularPress4_Success) {
+  int pin_adder = 0;
+  int reading_adder = 0;
+  int delay_adder = 0;
+  String expected_move = "";
+
+  int reading[4] = {4095, 4095, 4095, 4095};
+  int intervals[8] = {0, 125, 670, 1250, 1700, 2100, 2550, 2930};
+
+  for (int i = 0; i < 8; i++) {
+    pin_adder = 0;
+    reading_adder = 0;
+    delay_adder = 0;
+    expected_move = "";
+
+    reading[3] = intervals[i];
+    String move_queue = IO_GetButtonInput(reading, pin_adder, reading_adder, delay_adder);
+
+    if (i < 4) {
+      expected_move += 'G';
+      expected_move += (char)((i * 2) + 49);
+    }
+    else {
+      expected_move += 'H';
+      expected_move += (char)((i * 2) + 42);
+    }
+
+    assertEqual(move_queue, expected_move);
+    assertEqual(pin_adder, 144);
+    assertEqual(reading_adder, 12285 + intervals[i]);
+    assertEqual(delay_adder, 100);
+  }
+}
 
 /**
  * IO_InitTurnIndicator tests
@@ -313,9 +478,9 @@ test(IO_SetHWGameMap_Success) {
   IO_SetHWGameMap(board, function_called_correctly, red_counter, blue_counter, green_counter, true_counter, row_adder, col_adder);
 
   assertEqual(function_called_correctly, true);
-  assertEqual(red_counter, 64);
-  assertEqual(blue_counter, 64);
-  assertEqual(green_counter, 64);
+  assertEqual(red_counter, 32);
+  assertEqual(blue_counter, 32);
+  assertEqual(green_counter, 32);
   assertEqual(true_counter, 24);
   assertEqual(row_adder, 336);
   assertEqual(col_adder, 144);

@@ -25,6 +25,17 @@
 #define PLAYER1_TURN_INDICATOR_LED_PIN (12)
 #define PLAYER2_TURN_INDICATOR_LED_PIN (13)
 
+/* Button array thresholds */
+#define BUTTON_THRESHOLD1 (40)
+#define BUTTON_THRESHOLD2 (250)
+#define BUTTON_THRESHOLD3 (800)
+#define BUTTON_THRESHOLD4 (1400)
+#define BUTTON_THRESHOLD5 (1850)
+#define BUTTON_THRESHOLD6 (2250)
+#define BUTTON_THRESHOLD7 (2700)
+#define BUTTON_THRESHOLD8 (3300)
+#define ANALOG_READ_MAX   (4095)
+
 /* Arduino mocks */
 #define INPUT_MOCK  (1)
 #define OUTPUT_MOCK (2)
@@ -98,6 +109,22 @@ void digitalWriteMock(int pin, int output, int &pin_adder, int &low_counter, int
  */
 void delayMock(int time, int &delay_adder) {
   delay_adder += time;
+}
+
+/**
+ * This function will mock an analog read call
+ *
+ * @param pin: The "pin" to write to
+ * @param reading: The mocked reading
+ * @param pin_adder: The sum of the pin numbers being written to
+ * @param reading_adder: The sum of the readings
+ * @return int: The returned reading
+ */
+int analogReadMock(int pin, int reading, int &pin_adder, int &reading_adder) {
+  pin_adder += pin;
+  reading_adder += reading;
+
+  return reading;
 }
 
 /**
@@ -307,6 +334,192 @@ void IO_InitButton(int &pin_adder, int &input_counter, int &output_counter, int 
   pinModeMock(BUTTON_POWER_PIN, OUTPUT_MOCK, pin_adder, input_counter, output_counter);
 
   digitalWriteMock(BUTTON_POWER_PIN, HIGH_MOCK, pin_adder, low_counter, high_counter);
+}
+
+/**
+ * Checks if any buttons have been pressed
+ *
+ * @param reading: The readings to mock
+ * @param pin_adder: The sum of the pins being read
+ * @param reading_adder: The sum of the readings being read
+ * @param delay_adder: The sum of the delay time
+ * @return String: The string command to return
+ */
+String IO_GetButtonInput(int (&reading)[4], int &pin_adder, int &reading_adder, int &delay_adder) {
+  String move_queue = "";
+  bool button1_pressed = true;
+  bool button2_pressed = true;
+  bool button3_pressed = true;
+  bool button4_pressed = true;
+
+  int reading1 = analogReadMock(BUTTON_ARRAY_PIN1, reading[0], pin_adder, reading_adder);
+  int reading2 = analogReadMock(BUTTON_ARRAY_PIN2, reading[1], pin_adder, reading_adder);
+  int reading3 = analogReadMock(BUTTON_ARRAY_PIN3, reading[2], pin_adder, reading_adder);
+  int reading4 = analogReadMock(BUTTON_ARRAY_PIN4, reading[3], pin_adder, reading_adder);
+  
+  /* Button array 1 for rows 0 and 1 */
+  if (reading1 < BUTTON_THRESHOLD1) {
+    /* Button for [0, 0] */
+    move_queue = "A1";
+  }
+  else if (reading1 > BUTTON_THRESHOLD1 && reading1 < BUTTON_THRESHOLD2) {
+    /* Button for [0, 2] */
+    move_queue = "A3";
+  }
+  else if (reading1 > BUTTON_THRESHOLD2 && reading1 < BUTTON_THRESHOLD3) {
+    /* Button for [0, 4] */
+    move_queue = "A5";
+  }
+  else if (reading1 > BUTTON_THRESHOLD3 && reading1 < BUTTON_THRESHOLD4) {
+    /* Button for [0, 6] */
+    move_queue = "A7";
+  }
+  else if (reading1 > BUTTON_THRESHOLD4 && reading1 < BUTTON_THRESHOLD5) {
+    /* Button for [1, 1] */
+    move_queue = "B2";
+  }
+  else if (reading1 > BUTTON_THRESHOLD5 && reading1 < BUTTON_THRESHOLD6) {
+    /* Button for [1, 3] */
+    move_queue = "B4";
+  }
+  else if (reading1 > BUTTON_THRESHOLD6 && reading1 < BUTTON_THRESHOLD7) {
+    /* Button for [1, 5] */
+    move_queue = "B6";
+  }
+  else if (reading1 > BUTTON_THRESHOLD7 && reading1 < BUTTON_THRESHOLD8) {
+    /* Button for [1, 7] */
+    move_queue = "B8";
+  }
+  else {
+    /* Button in the first row of buttons were not pressed */
+    button1_pressed = false;
+  }
+
+  /* Button array 2 for rows 2 and 3 */
+  if (reading2 < BUTTON_THRESHOLD1) {
+    /* Button for [2, 0] */
+    move_queue = "C1";
+  }
+  else if (reading2 > BUTTON_THRESHOLD1 && reading2 < BUTTON_THRESHOLD2) {
+    /* Button for [2, 2] */
+    move_queue = "C3";
+  }
+  else if (reading2 > BUTTON_THRESHOLD2 && reading2 < BUTTON_THRESHOLD3) {
+    /* Button for [2, 4] */
+    move_queue = "C5";
+  }
+  else if (reading2 > BUTTON_THRESHOLD3 && reading2 < BUTTON_THRESHOLD4) {
+    /* Button for [2, 6] */
+    move_queue = "C7";
+  }
+  else if (reading2 > BUTTON_THRESHOLD4 && reading2 < BUTTON_THRESHOLD5) {
+    /* Button for [3, 1] */
+    move_queue = "D2";
+  }
+  else if (reading2 > BUTTON_THRESHOLD5 && reading2 < BUTTON_THRESHOLD6) {
+    /* Button for [3, 3] */
+    move_queue = "D4";
+  }
+  else if (reading2 > BUTTON_THRESHOLD6 && reading2 < BUTTON_THRESHOLD7) {
+    /* Button for [3, 5] */
+    move_queue = "D6";
+  }
+  else if (reading2 > BUTTON_THRESHOLD7 && reading2 < BUTTON_THRESHOLD8) {
+    /* Button for [3, 7] */
+    move_queue = "D8";
+  }
+  else {
+    /* Button in the second row of buttons were not pressed */
+    button2_pressed = false;
+  }
+
+  /* Button array 3 for rows 4 and 5 */
+  if (reading3 < BUTTON_THRESHOLD1) {
+    /* Button for [4, 0] */
+    move_queue = "E1";
+  }
+  else if (reading3 > BUTTON_THRESHOLD1 && reading3 < BUTTON_THRESHOLD2) {
+    /* Button for [4, 2] */
+    move_queue = "E3";
+  }
+  else if (reading3 > BUTTON_THRESHOLD2 && reading3 < BUTTON_THRESHOLD3) {
+    /* Button for [4, 4] */
+    move_queue = "E5";
+  }
+  else if (reading3 > BUTTON_THRESHOLD3 && reading3 < BUTTON_THRESHOLD4) {
+    /* Button for [4, 6] */
+    move_queue = "E7";
+  }
+  else if (reading3 > BUTTON_THRESHOLD4 && reading3 < BUTTON_THRESHOLD5) {
+    /* Button for [5, 1] */
+    move_queue = "F2";
+  }
+  else if (reading3 > BUTTON_THRESHOLD5 && reading3 < BUTTON_THRESHOLD6) {
+    /* Button for [5, 3] */
+    move_queue = "F4";
+  }
+  else if (reading3 > BUTTON_THRESHOLD6 && reading3 < BUTTON_THRESHOLD7) {
+    /* Button for [5, 5] */
+    move_queue = "F6";
+  }
+  else if (reading3 > BUTTON_THRESHOLD7 && reading3 < BUTTON_THRESHOLD8) {
+    /* Button for [5, 7] */
+    move_queue = "F8";
+  }
+  else {
+    /* Button in the third row of buttons were not pressed */
+    button3_pressed = false;
+  }
+  
+  /* Button array 4 for rows 6 and 7 */
+  if (reading3 < BUTTON_THRESHOLD1) {
+    /* Button for [6, 0] */
+    move_queue = "G1";
+  }
+  else if (reading3 > BUTTON_THRESHOLD1 && reading3 < BUTTON_THRESHOLD2) {
+    /* Button for [6, 2] */
+    move_queue = "G3";
+  }
+  else if (reading3 > BUTTON_THRESHOLD2 && reading3 < BUTTON_THRESHOLD3) {
+    /* Button for [6, 4] */
+    move_queue = "G5";
+  }
+  else if (reading3 > BUTTON_THRESHOLD3 && reading3 < BUTTON_THRESHOLD4) {
+    /* Button for [6, 6] */
+    move_queue = "G7";
+  }
+  else if (reading3 > BUTTON_THRESHOLD4 && reading3 < BUTTON_THRESHOLD5) {
+    /* Button for [7, 1] */
+    move_queue = "H2";
+  }
+  else if (reading3 > BUTTON_THRESHOLD5 && reading3 < BUTTON_THRESHOLD6) {
+    /* Button for [7, 3] */
+    move_queue = "H4";
+  }
+  else if (reading3 > BUTTON_THRESHOLD6 && reading3 < BUTTON_THRESHOLD7) {
+    /* Button for [7, 5] */
+    move_queue = "H6";
+  }
+  else if (reading3 > BUTTON_THRESHOLD7 && reading3 < BUTTON_THRESHOLD8) {
+    /* Button for [7, 7] */
+    move_queue = "H8";
+  }
+  else {
+    /* Button in the fourth row of buttons were not pressed */
+    button4_pressed = false;
+  }
+
+  /* Verify only one output pin is getting one accepted analog reading at a time */
+  if ((button1_pressed == true && button2_pressed == true) || (button1_pressed == true && button3_pressed == true) ||
+      (button1_pressed == true && button4_pressed == true) || (button2_pressed == true && button3_pressed == true) ||
+      (button2_pressed == true && button4_pressed == true) || (button3_pressed == true && button4_pressed == true)) {
+    move_queue = "";
+  }
+
+  /* Delay to account for button press and debounce */
+  delayMock(100, delay_adder);
+  
+  return move_queue;
 }
 
 /**
