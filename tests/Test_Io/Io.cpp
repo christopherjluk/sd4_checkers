@@ -472,35 +472,35 @@ String IO_GetButtonInput(int (&reading)[4], int &pin_adder, int &reading_adder, 
   }
   
   /* Button array 4 for rows 6 and 7 */
-  if (reading3 < BUTTON_THRESHOLD1) {
+  if (reading4 < BUTTON_THRESHOLD1) {
     /* Button for [6, 0] */
     move_queue = "G1";
   }
-  else if (reading3 > BUTTON_THRESHOLD1 && reading3 < BUTTON_THRESHOLD2) {
+  else if (reading4 > BUTTON_THRESHOLD1 && reading4 < BUTTON_THRESHOLD2) {
     /* Button for [6, 2] */
     move_queue = "G3";
   }
-  else if (reading3 > BUTTON_THRESHOLD2 && reading3 < BUTTON_THRESHOLD3) {
+  else if (reading4 > BUTTON_THRESHOLD2 && reading4 < BUTTON_THRESHOLD3) {
     /* Button for [6, 4] */
     move_queue = "G5";
   }
-  else if (reading3 > BUTTON_THRESHOLD3 && reading3 < BUTTON_THRESHOLD4) {
+  else if (reading4 > BUTTON_THRESHOLD3 && reading4 < BUTTON_THRESHOLD4) {
     /* Button for [6, 6] */
     move_queue = "G7";
   }
-  else if (reading3 > BUTTON_THRESHOLD4 && reading3 < BUTTON_THRESHOLD5) {
+  else if (reading4 > BUTTON_THRESHOLD4 && reading4 < BUTTON_THRESHOLD5) {
     /* Button for [7, 1] */
     move_queue = "H2";
   }
-  else if (reading3 > BUTTON_THRESHOLD5 && reading3 < BUTTON_THRESHOLD6) {
+  else if (reading4 > BUTTON_THRESHOLD5 && reading4 < BUTTON_THRESHOLD6) {
     /* Button for [7, 3] */
     move_queue = "H4";
   }
-  else if (reading3 > BUTTON_THRESHOLD6 && reading3 < BUTTON_THRESHOLD7) {
+  else if (reading4 > BUTTON_THRESHOLD6 && reading4 < BUTTON_THRESHOLD7) {
     /* Button for [7, 5] */
     move_queue = "H6";
   }
-  else if (reading3 > BUTTON_THRESHOLD7 && reading3 < BUTTON_THRESHOLD8) {
+  else if (reading4 > BUTTON_THRESHOLD7 && reading4 < BUTTON_THRESHOLD8) {
     /* Button for [7, 7] */
     move_queue = "H8";
   }
