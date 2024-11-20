@@ -267,6 +267,99 @@ bool Checkers::Checkers_CanJump() {
   return false;
 }
 
+bool Checkers::hasMove()
+{
+    activePlayer = 3 - activePlayer;
+    if (canJump())
+    {
+        activePlayer = 3 - activePlayer;
+        return true;
+    }
+    else
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (board[i][j] == 1 && activePlayer == 1)
+                {
+                    if (i > 0 && j > 0 && board[i - 1][j - 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i > 0 && j < 7 && board[i - 1][j + 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                }
+                else if (board[i][j] == 3 && activePlayer == 1)
+                {
+                    if (i > 0 && j > 0 && board[i - 1][j - 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i > 0 && j < 7 && board[i - 1][j + 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i < 7 && j > 0 && board[i + 1][j - 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i < 7 && j < 7 && board[i + 1][j + 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                }
+                if (board[i][j] == 2 && activePlayer == 2)
+                {
+                    if (i < 7 && j > 0 && board[i + 1][j - 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i < 7 && j < 7 && board[i + 1][j + 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                }
+                else if (board[i][j] == 4 && activePlayer == 2)
+                {
+                    if (i > 0 && j > 0 && board[i - 1][j - 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i > 0 && j < 7 && board[i - 1][j + 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i < 7 && j > 0 && board[i + 1][j - 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                    if (i < 7 && j < 7 && board[i + 1][j + 1] == 0)
+                    {
+                        activePlayer = 3 - activePlayer;
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    activePlayer = 3 - activePlayer;
+    return false;
+}
+
 /**
  * A turn (or a partial turn) for a player, where a piece will move from one spot to another
  *
@@ -345,7 +438,7 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
     }
 
     /* If one player has no more pieces, then the game ends (with the winner variable being set and the active player being the winner) and return the move is valid */
-    if (p1_count == 0 || p2_count == 0) {
+    if (p1_count == 0 || p2_count == 0 || hasMove() == 0) {
       won = 1;
       return 1;
     }
@@ -382,7 +475,7 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
     }
 
     /* If one player has no more pieces, then the game ends (with the winner variable being set and the active player being the winner) and return the move is valid */
-    if (p1_count == 0 || p2_count == 0) {
+    if (p1_count == 0 || p2_count == 0 || hasMove() == 0) {
       won = 1;
       return 1;
     }
