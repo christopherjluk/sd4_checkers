@@ -30,6 +30,7 @@ class Checkers {
     /* Functions */
     bool Checkers_TurnOver(int to[2]);
     bool Checkers_CanJump();
+    bool hasMove();
 };
 
 #endif /* CHECKERS_H */
