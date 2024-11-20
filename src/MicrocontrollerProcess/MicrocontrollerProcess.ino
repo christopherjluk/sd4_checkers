@@ -78,7 +78,6 @@ void loop() {
         /* If read button is the same as the first move, ignore as debouncing may not be detected yet */
         if (move_queue != first_button_input) {
           /* Store move in array */
-          Serial.println("Button pressed");
           move_command[0] = first_button_input;
           move_command[1] = move_queue;
           first_button_input = "";
@@ -109,7 +108,6 @@ void loop() {
     IO_SetTurnIndicator(checkers_game.Checkers_GetActivePlayer());
 
     /* Set the game map LEDs */
-    Serial.println("Update");
     IO_SetHWGameMap(checkers_game);
   }
   else {
