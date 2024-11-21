@@ -111,10 +111,14 @@ void VoiceRecognition_Init() {
  */
 void VoiceRecognition_GetInput(String &parsed_checker_move) {
   String checker_move = "";
+  int start_timer = -1, stop_timer, duration;
 
   /* Check for data if BLE is connected */
   if (ble.isConnected()) {
     while (ble.available()) {
+      /* Start timer */
+      start_timer = millis();
+
       /* Read and process incoming data */
       char received_data = ble.read();
       checker_move += received_data;
@@ -126,7 +130,14 @@ void VoiceRecognition_GetInput(String &parsed_checker_move) {
   }
 
   VoiceRecognition_ParseMoves(checker_move, parsed_checker_move);
-  
+  stop_timer = millis();
+  if (start_timer != -1) {
+    duration = stop_timer - start_timer;
+    Serial.print("Parsing move from BLE took ");
+    Serial.print(duration);
+    Serial.println(" milliseconds");
+  }
+
   /* Print the parsed move */
   Serial.println(parsed_checker_move);
 }
