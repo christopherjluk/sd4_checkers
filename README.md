@@ -34,4 +34,4 @@ The MicrocontrollerProcess folder contains all of the files needed for the funct
 The tests folder contain all of the unit tests for the process and the different modules. These unit tests are run via the public `ArduinoUnit` unit testing library, which is included in the `tests/external` folder and can be downloaded directly in the Arduino IDE.
 
 #### External
-The external folder contains the code for the iOS app needed for the voice recognition app.
+The external folder contains the code for the iOS voice recognition app.
