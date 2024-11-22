@@ -1,0 +1,2 @@
+# Voice Recognition LED Checkers Game
+This Voice Recognition LED Checkers game was developed for the purposes of a Senior Design capstone project for ECE 1896: Senior Design Project at the University of Pittsburgh's Swanson School of Engineering. It is a fully functional checkers game played on a hardware board. The inputs either come from a Bluetooth-compatible Voice Recognition app or from pressing buttons on the board. The outputs, including the game map and turn indicators, are displayed via separate red, green, and blue LEDs.
