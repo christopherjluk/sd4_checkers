@@ -25,6 +25,7 @@ String move_command[2]; /* The move command broken down into a string array */
 String move_queue;
 int move_int[2][2]; /* 2D array for storing the move to send to the game algorithm */
 int valid_move;
+int active_player;
 
 /* The Checkers game containing the board and player information */
 Checkers checkers_game;
@@ -51,6 +52,7 @@ void setup() {
   move_command[0] = "";
   move_command[1] = "";
   move_queue = "";
+  active_player = 1;
 }
 
 /**
@@ -94,7 +96,7 @@ void loop() {
     if (move_command[0] != "" && move_command[1] != "") {
       /* Convert the string to a 2D integer array to send to the game algorithm */
       IO_ConvertMapToIndices(move_command, move_int);
-  
+
       /* Make a call to the game algorithm to pass in moves */
       valid_move = checkers_game.Checkers_Turn(move_int[0], move_int[1]);
 
@@ -102,6 +104,12 @@ void loop() {
       if (valid_move == 0) {
         IO_BlinkTurnIndicator(checkers_game.Checkers_GetActivePlayer());
       }
+    }
+
+    /* Put a delay if the turn gets switched so the first player doesn't accidentally button press for the second player */
+    if (active_player != checkers_game.Checkers_GetActivePlayer()) {
+      active_player = checkers_game.Checkers_GetActivePlayer();
+      delay(400);
     }
 
     /* Set the turn indicator LEDs */

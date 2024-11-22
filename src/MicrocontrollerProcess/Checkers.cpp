@@ -285,6 +285,7 @@ bool Checkers::Checkers_HasMove()
     /* Iterates through the rows and columns */
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
+        /* Checks if there is an empty space for the piece to move to (Player 1) */
         if (board[i][j] == 1 && active_player == 1) {
           if (i > 0 && j > 0 && board[i - 1][j - 1] == 0) {
             active_player = 3 - active_player;
@@ -295,6 +296,7 @@ bool Checkers::Checkers_HasMove()
             return true;
           }
         }
+        /* Checks if there is an empty space for the king to move to (Player 1) */
         else if (board[i][j] == 3 && active_player == 1) {
           if (i > 0 && j > 0 && board[i - 1][j - 1] == 0) {
             active_player = 3 - active_player;
@@ -313,6 +315,7 @@ bool Checkers::Checkers_HasMove()
             return true;
           }
         }
+        /* Checks if there is an empty space for the piece to move to (Player 2) */
         if (board[i][j] == 2 && active_player == 2) {
           if (i < 7 && j > 0 && board[i + 1][j - 1] == 0) {
             active_player = 3 - active_player;
@@ -323,6 +326,7 @@ bool Checkers::Checkers_HasMove()
             return true;
           }
         }
+        /* Checks if there is an empty space for the king to move to (Player 2) */
         else if (board[i][j] == 4 && active_player == 2) {
           if (i > 0 && j > 0 && board[i - 1][j - 1] == 0) {
             active_player = 3 - active_player;
@@ -345,6 +349,7 @@ bool Checkers::Checkers_HasMove()
     }
   }
 
+  /* Switch the active player if there isn't a move to indicate a winner */
   active_player = 3 - active_player;
   return false;
 }

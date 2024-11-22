@@ -315,7 +315,7 @@ String IO_GetButtonInput() {
   }
 
   /* Delay to account for button press and debounce */
-  delay(100);
+  delay(25);
   
   return move_queue;
 }
