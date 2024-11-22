@@ -162,7 +162,7 @@ test(IO_GetButtonInput_MultiplePress_Success) {
   assertEqual(move_queue, "");
   assertEqual(pin_adder, 144);
   assertEqual(reading_adder, 8240);
-  assertEqual(delay_adder, 100);
+  assertEqual(delay_adder, 25);
 }
 
 test(IO_GetButtonInput_NoPress_Success) {
@@ -177,7 +177,7 @@ test(IO_GetButtonInput_NoPress_Success) {
   assertEqual(move_queue, "");
   assertEqual(pin_adder, 144);
   assertEqual(reading_adder, 16380);
-  assertEqual(delay_adder, 100);
+  assertEqual(delay_adder, 25);
 }
 
 test(IO_GetButtonInput_RegularPress1_Success) {
@@ -210,7 +210,7 @@ test(IO_GetButtonInput_RegularPress1_Success) {
     assertEqual(move_queue, expected_move);
     assertEqual(pin_adder, 144);
     assertEqual(reading_adder, 12285 + intervals[i]);
-    assertEqual(delay_adder, 100);
+    assertEqual(delay_adder, 25);
   }
 }
 
@@ -244,7 +244,7 @@ test(IO_GetButtonInput_RegularPress2_Success) {
     assertEqual(move_queue, expected_move);
     assertEqual(pin_adder, 144);
     assertEqual(reading_adder, 12285 + intervals[i]);
-    assertEqual(delay_adder, 100);
+    assertEqual(delay_adder, 25);
   }
 }
 
@@ -278,7 +278,7 @@ test(IO_GetButtonInput_RegularPress3_Success) {
     assertEqual(move_queue, expected_move);
     assertEqual(pin_adder, 144);
     assertEqual(reading_adder, 12285 + intervals[i]);
-    assertEqual(delay_adder, 100);
+    assertEqual(delay_adder, 25);
   }
 }
 
@@ -312,7 +312,7 @@ test(IO_GetButtonInput_RegularPress4_Success) {
     assertEqual(move_queue, expected_move);
     assertEqual(pin_adder, 144);
     assertEqual(reading_adder, 12285 + intervals[i]);
-    assertEqual(delay_adder, 100);
+    assertEqual(delay_adder, 25);
   }
 }
 

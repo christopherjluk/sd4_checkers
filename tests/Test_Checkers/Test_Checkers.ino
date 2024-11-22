@@ -151,6 +151,31 @@ test(Checkers_GetWin_Success) {
 }
 
 /**
+ * Checkers_HasMove tests
+ **/
+test(Checkers_HasMove_HasMove_Success) {
+  Checkers checkers_game;
+  assertEqual(checkers_game.Checkers_HasMove(), true);
+}
+
+test(Checkers_HasMove_NoMove_Success) {
+  Checkers checkers_game;
+
+  for (int row = 0; row < 8; row++) {
+    for (int col = 0; col < 8; col++) {
+      if ((row > 4) && ((row + col) % 2 == 0)) {
+        checkers_game.board[row][col] = 0;
+      }
+    }
+  }
+
+  checkers_game.board[3][1] = 1;
+  checkers_game.active_player = 2;
+
+  assertEqual(checkers_game.Checkers_HasMove(), false);
+}
+
+/**
  * Checkers_TurnOver tests
  **/
 test(Checkers_TurnOver_Player1_Regular_NW_Success) {

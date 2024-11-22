@@ -1,13 +1,12 @@
 /************************************************************
  * @file Checkers.cpp
  * @brief The implementation for the Checkers game algorithm
- * @note This file is copied over from src and modified for testing
  ************************************************************/
 
 /**********************************
  ** Library Includes
  **********************************/
-#include "Checkers.h";
+#include "Checkers.h"
 
 /**********************************
  ** Third Party Libraries Includes
@@ -19,10 +18,6 @@
 
 /**********************************
  ** Global Variables
- **********************************/
-
-/**********************************
- ** Helper Functions
  **********************************/
 
 /**********************************
@@ -58,7 +53,6 @@ Checkers::Checkers() {
     }
   }
 }
-
 
 /**
  * Retrieve the state of a square based on the row and column
@@ -274,6 +268,93 @@ bool Checkers::Checkers_CanJump() {
 }
 
 /**
+ * Checks if the game still has a move
+ *
+ */
+bool Checkers::Checkers_HasMove()
+{
+  /* Switches the turns */
+  active_player = 3 - active_player;
+
+  /* Checks if there is a jump available for the first player. If not, check other conditions. */
+  if (Checkers_CanJump()) {
+    active_player = 3 - active_player;
+    return true;
+  }
+  else {
+    /* Iterates through the rows and columns */
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        /* Checks if there is an empty space for the piece to move to (Player 1) */
+        if (board[i][j] == 1 && active_player == 1) {
+          if (i > 0 && j > 0 && board[i - 1][j - 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i > 0 && j < 7 && board[i - 1][j + 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+        }
+        /* Checks if there is an empty space for the king to move to (Player 1) */
+        else if (board[i][j] == 3 && active_player == 1) {
+          if (i > 0 && j > 0 && board[i - 1][j - 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i > 0 && j < 7 && board[i - 1][j + 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i < 7 && j > 0 && board[i + 1][j - 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i < 7 && j < 7 && board[i + 1][j + 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+        }
+        /* Checks if there is an empty space for the piece to move to (Player 2) */
+        if (board[i][j] == 2 && active_player == 2) {
+          if (i < 7 && j > 0 && board[i + 1][j - 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i < 7 && j < 7 && board[i + 1][j + 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+        }
+        /* Checks if there is an empty space for the king to move to (Player 2) */
+        else if (board[i][j] == 4 && active_player == 2) {
+          if (i > 0 && j > 0 && board[i - 1][j - 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i > 0 && j < 7 && board[i - 1][j + 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i < 7 && j > 0 && board[i + 1][j - 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+          if (i < 7 && j < 7 && board[i + 1][j + 1] == 0) {
+            active_player = 3 - active_player;
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  /* Switch the active player if there isn't a move to indicate a winner */
+  active_player = 3 - active_player;
+  return false;
+}
+
+/**
  * A turn (or a partial turn) for a player, where a piece will move from one spot to another
  *
  * @param from: The square where the desired piece to move is
@@ -351,7 +432,7 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
     }
 
     /* If one player has no more pieces, then the game ends (with the winner variable being set and the active player being the winner) and return the move is valid */
-    if (p1_count == 0 || p2_count == 0) {
+    if (p1_count == 0 || p2_count == 0 || Checkers_HasMove() == 0) {
       won = 1;
       return 1;
     }
@@ -388,7 +469,7 @@ int Checkers::Checkers_Turn(int from[2], int to[2]) {
     }
 
     /* If one player has no more pieces, then the game ends (with the winner variable being set and the active player being the winner) and return the move is valid */
-    if (p1_count == 0 || p2_count == 0) {
+    if (p1_count == 0 || p2_count == 0 || Checkers_HasMove() == 0) {
       won = 1;
       return 1;
     }

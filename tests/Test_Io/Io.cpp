@@ -517,7 +517,7 @@ String IO_GetButtonInput(int (&reading)[4], int &pin_adder, int &reading_adder, 
   }
 
   /* Delay to account for button press and debounce */
-  delayMock(100, delay_adder);
+  delayMock(25, delay_adder);
   
   return move_queue;
 }

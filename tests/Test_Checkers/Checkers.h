@@ -22,6 +22,7 @@ class Checkers {
     int  Checkers_Turn(int from[2], int to[2]);
 
     /* Originally Private Functions */
+    bool Checkers_HasMove();
     bool Checkers_TurnOver(int to[2]);
     bool Checkers_CanJump();
 
