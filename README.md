@@ -23,6 +23,7 @@ A printed circuit board was custom-designed for the purposes of storing all of t
 - 16 10K-Resistors
 - 3 MAX7219 Chips
 - ESP32 Dev Board
+- ESP32-compatible BLE Module
 
 ### Software
 The software consists of a process making calls to a Game Algorithm module, an I/O module, and a Voice Recognition module. The process loops over and over in order for the game functionality to run properly.
